@@ -1,0 +1,14 @@
+# Windows
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Office — arquivos de bloqueio criados enquanto um documento está aberto
+~$*
+
+# macOS
+.DS_Store
+
+# Temporários
+*.tmp
+*.bak
