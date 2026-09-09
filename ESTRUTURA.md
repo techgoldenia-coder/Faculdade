@@ -4,7 +4,7 @@ Mapa objetivo. Atualizado automaticamente quando a estrutura muda.
 
 **Organização por matéria, não por semestre.** Cada matéria é uma pasta na raiz. O semestre fica registrado no `INFO.md` da matéria e no `PAINEL.md`.
 
-- `/` — raiz: arquivos de controle (`CLAUDE.md`, `PAINEL.md`, `ESTRUTURA.md`, `HISTORICO.md`) + uma pasta por matéria.
+- `/` — raiz: arquivos de controle (`CLAUDE.md`, `PAINEL.md`, `ESTRUTURA.md`, `HISTORICO.md`), `README.md` (capa do repositório no GitHub) e `.gitignore` + uma pasta por matéria. Versionado em `techgoldenia-coder/Faculdade` (privado).
 - `PAINEL.md` — índice de todas as matérias (semestre, status, professor), prazos em aberto, datas do semestre e notas. Primeiro arquivo a consultar.
 - `0 - Institucional/` — o que vale para o curso inteiro. `Normas-ABNT.md` (formatação, citações NBR 10520, referências NBR 6023; template do professor sempre prevalece); `Grade-Curricular.md` (grade oficial e situação de cada matéria, a preencher); `BANCO-DE-REFERENCIAS.md` (toda fonte já usada em trabalho, em ABNT, com onde foi usada — transversal às matérias, por isso fica aqui).
 - `1 - Modelos/` — modelos para copiar. `MODELO-INFO-Materia.md`, `MODELO-Anotacao-de-Aula.md`, `MODELO-Trabalho.md` (enunciado, critérios de correção, estrutura, checklist de entrega), `MODELO-Resumo-para-Prova.md` (mapa de conteúdo, comparações, simulado, erros). `_MODELO-MATERIA/` — pasta pronta para clonar ao abrir matéria nova.

@@ -2,6 +2,13 @@
 
 Registro cronológico do que foi feito. Serve para retomar contexto em sessões futuras.
 
+## 09/09/2026 — Pasta versionada no GitHub
+
+- `git init` na raiz e push para **`techgoldenia-coder/Faculdade`** — repositório **privado** (confirmado: a API do GitHub responde 404 sem autenticação). O repo estava vazio; este é o commit inicial.
+- 77 arquivos versionados, 94 MB. Maior arquivo: `Gestão de marcas 5.pdf` (16,1 MB) — abaixo do limite de 100 MB do GitHub, sem necessidade de Git LFS.
+- Criados `README.md` (capa do repositório, aponta para PAINEL/ESTRUTURA/HISTORICO) e `.gitignore` (lixo do Windows, arquivos de bloqueio `~$` do Office).
+- **A visibilidade privada é requisito, não preferência:** o repositório contém os PDFs das unidades da PUC-PR (© PUCPR — Todos os direitos reservados) e dados institucionais reais da MEGA-WR usados na AS1 de plano de mídia. Registrado como regra no `CLAUDE.md`.
+
 ## 08/09/2026 — AS1 de Gestão de Anúncios: Plano de Mídia MEGA-WR
 
 - Trabalho em grupo da semana 4. Cliente escolhido: **MEGA-WR Confecções** (Leme/SP), linha Fitness — camiseta dry fit e calça legging.

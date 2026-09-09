@@ -7,6 +7,7 @@
 - **Trabalho:** Analista de marketing na Drip-Plan; objetivo de atuar como consultor de marketing.
 - **Outro workspace:** `Desktop/0-Claude` — consultoria, clientes e estudos (método La Torre). Esta pasta aqui é **só faculdade**.
 - **Sistema:** Windows 11 — shell PowerShell.
+- **Repositório:** esta pasta é versionada em `techgoldenia-coder/Faculdade` (GitHub, **privado**).
 
 ## Para que serve esta pasta
 
@@ -65,6 +66,9 @@ Trabalho que gere muitos arquivos (anexos, planilhas, versões) pode ganhar past
 - Em revisão para prova: gerar as questões primeiro; o gabarito comentado só depois que eu responder.
 
 ## Regras do projeto
+
+- **Lembrar de commits em checkpoints:** o repositório é privado no GitHub (`techgoldenia-coder/Faculdade`), para acesso em casa e no trabalho. Sempre que fecharmos um passo importante — matéria nova, trabalho entregue, nota lançada — me lembrar de commitar e sugerir a mensagem.
+- **O repositório não pode virar público.** Contém material didático da PUC-PR protegido por direito autoral e dados reais de cliente usados nos trabalhos.
 
 - **Resumo antes de salvar conteúdo:** antes de gravar anotação, resumo ou trabalho, mostrar um resumo curto do que vai entrar e esperar meu ok. Não vale para `ESTRUTURA.md` e `HISTORICO.md`.
 - **Manter `PAINEL.md`, `ESTRUTURA.md` e `HISTORICO.md` atualizados** automaticamente, sem eu pedir, sempre que a estrutura mudar ou fecharmos um passo importante. Curtos: uma linha por item.
