@@ -2,6 +2,55 @@
 
 Registro cronológico do que foi feito. Serve para retomar contexto em sessões futuras.
 
+## 16/09/2026 — AS2 de Gestão de Conteúdo: planejamento estratégico de conteúdo MEGA-WR
+
+- Enunciado recebido no chat: relatório estruturado em 3 partes (marca + calendário 70-20-10; métricas + cenário alto alcance × baixa conversão; community management + crise). **Individual, sem template.** Prazo e peso não informados.
+- **Decisão do Yan:** usar a **MEGA-WR** (marca real) mesmo com o enunciado pedindo "marca fictícia". Risco de desconto avisado; mitigação: premissa declarada na introdução — dados institucionais reais, calendário/metas/números/crise fictícios, nenhuma escola ou empresa associada à crise.
+- Recorte: MEGA-WR inteira (nicho uniformes personalizados, B2B local), não só a linha Fitness — coerente com o posicionamento real "especialistas em uniformes, não loja de moda".
+- Calendário de **outubro/2026**: 20 posts (14 E / 4 T-I / 2 P) em Instagram + Facebook, WhatsApp como conversão. Datas conferidas na web: Professor 15/10, Médico 18/10, Dentista 25/10, Comerciário 30/10 (Lei 12.790/2013).
+- **Divergência no material:** a un. 05 chama os 20% de "tendências"; a un. 08, de "inspiracional". A definição oficial está numa imagem da un. 05 que não sai na extração — texto usa "tendências e inspiração" e cita as duas. Print pedido ao Yan (opcional).
+- Métricas: alcance qualificado (% na região), taxa de engajamento com peso em salvamentos/compartilhamentos, taxa de conversão (conversas de WhatsApp ÷ cliques, com etiqueta de origem). Crise hipotética: estampa de uniforme escolar descascando, exposta em grupo de Facebook da cidade.
+- Citação do material da PUC alinhada à convenção do banco: `(PUCPR, [2025]a–h)` — data tirada de "Fonte: o autor, 2025" nas imagens. 8 unidades + documento institucional da MEGA-WR registrados no `BANCO-DE-REFERENCIAS.md`.
+- Rascunho completo salvo; aguarda revisão do Yan. Formato final (docx/PDF em ABNT) ainda não gerado.
+
+## 16/09/2026 — AS2 de Gestão de Anúncios: análise de resultados e otimização do plano de mídia
+
+- Enunciado recebido no chat: apresentação em grupo (PDF) com 4 itens — recapitulação do cliente/objetivo, dados e métricas hipotéticos por mídia, plano de otimização (push, mídia tradicional, pull) e plano de ação interno.
+- Base: AS1 (plano de mídia MEGA-WR, linha Fitness, Leme/SP, 01/11/2026–31/01/2027, R$ 12.000, Meta Ads + Google Ads + mídia exterior). Material de apoio lido: unidades 03 a 08.
+- **Ponto do material a tratar com cuidado:** a unidade 05 lista leilão de palavras-chave/Google Ads como push/outbound; a unidade 06 diz que o anúncio que responde a uma busca é canal pull. A unidade 05 também chama push de "estratégia de mídia tradicional".
+- **Decisões do Yan:** estrutura e cenário hipotético aprovados; Google Ads tratado como **pull**, sem slide sobre a divergência do material; trabalho **individual**; formato **.pptx**.
+- **Cenário:** leitura em 30/11/2026 (fim da Fase 1, 33% do período). Diagnóstico: Meta saturado (frequência 8,5), Reels a R$ 10,81 por conversa contra R$ 23,68 do feed, Google B2C com 38% da verba em termos irrelevantes, Google B2B no teto (91% de parcela de impressões), outdoor sem rastreio, 59% das perdas B2C por causa interna. ROAS digital 2,55; B2B com ROAS 10,9.
+- **Otimização:** verba restante de R$ 6.510 redistribuída sem aumentar o total; prospecção ativa em 60 academias; busdoor com QR code e cupom; outdoor não renovado; novos KPIs de venda, ROAS, tempo de resposta e origem do lead.
+- **Produzido** em `Gestão de Anúncios em Canais Sociais/AS2 - Otimização do Plano de Mídia MEGA-WR/`: `TRABALHO.md`, `(rascunho).pptx` com 24 slides e gráficos nativos, e planilha de dados com fórmulas conferidas no Excel. Renderização revisada slide a slide pelo PowerPoint; exportação para PDF testada.
+- **Dados reais usados:** prazo de 20 a 30 dias e horário de atendimento, conferidos em megawr.com.br em 16/09/2026. Preço e ticket médio são **premissas hipotéticas**.
+- **Citações:** unidades 03 a 08 como `PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ, 2026a–f`, no padrão da AS1 da matéria. As outras matérias usam `[2026?]`/`[2025]`; ver nota no banco de referências.
+- **Pendências:** prazo, peso e rubrica; nome do(a) professor(a) na capa; revisão do Yan; exportar PDF.
+
+## 16/09/2026 — AS2 de Construção de Interfaces: versão preliminar completa, com pesquisa simulada
+
+- **Decisão do Yan:** montar o trabalho inteiro com entrevistas simuladas, com aviso em vermelho antes da pesquisa, para mostrar a proposta ao professor. Depois, fazer as conversas reais apresentando a solução como sugestão e refazer as seções que dependem de usuário.
+- **Por que "simulada":** as respostas enviadas batiam com as proto-personas escritas em 14/09 (nome, idade, cargo, cidade, 14 pessoas, COREN) e comentavam um protótipo que ainda não existia. Não usar esse conteúdo como pesquisa real.
+- **Aviso no PDF:** caixa vermelha no início da seção 2 e aviso curto nas seções 3, 4, 7.3, 8 e no Apêndice B. Nas tabelas de teste, só entrou o que a simulação trazia: tempo "não medido" e P3 "a realizar".
+- **Diagnóstico corrigido no ar:** são 8 links de WhatsApp com a mesma mensagem (4 "Solicitar orçamento", 2 no telefone, "Fale com a gente", "Falar no WhatsApp"), e não 8 botões iguais. O mínimo de 10 peças aparece só na descrição lida pelo Google. O botão do site é azul, e o protótipo seguiu essa cor.
+- **Solução:** orçamento guiado em 4 passos que termina no WhatsApp com a mensagem pronta. A versão 2, revisada após o feedback, trouxe pedido em grupo, "ainda não tenho os tamanhos" com Salvar, mínimo e prazo junto do botão, e baixar ou copiar o resumo. Faixa de preço e preço para poucas peças ficaram como recomendação à MEGA-WR.
+- **Produzido:** `Prototipo/index.html` (navegável, `?v=1` e `?v=2`), 15 telas em `Prototipo/telas/`, `Entrega/YanSuyama_ProjetoUXUI.pdf` (38 páginas, ABNT, sumário numerado), sitemap e fluxograma em SVG. Para regerar: `gerar_telas.py` e depois `gerar_pdf.py`. O `TRABALHO.md` é a fonte do PDF.
+- **Citações:** só unidades da disciplina (PUCPR, [2026?]a–f), o site da MEGA-WR, WCAG 2.2 (versão de 12/12/2024, conferida) e LGPD, art. 6º, III (conferida no Planalto). Os livros da bibliografia não foram citados porque não foram lidos.
+- **Roteiro reescrito** para a sessão real com 3 pessoas: parte exploratória → site atual cronometrado → proposta como sugestão ("o que você mudaria?"). Questionário corrigido: diz "8 perguntas".
+- **Protótipo sem link público:** usa a marca de um cliente real, então a forma de hospedar fica a critério do Yan. No PDF, o link está como `[INSERIR LINK]`.
+- **Inconsistência em `0-Claude/Clientes/MEGA WR/DOCUMENTO-INSTITUCIONAL.md`:** o resumo executivo diz mínimo de 12 peças e a seção 6 diz 10. Usei 10, que é o valor confirmado.
+- **Pendências:** 3 conversas reais; conversa com William e Rosangela (volume abaixo de 10 peças, faixa de preço, taxa de arte, pedido em grupo); link do protótipo; enunciado e prazo não salvos na pasta; `AS2 - Projeto UX UI MEGA-WR (rascunho).docx` está desatualizado.
+
+## 14/09/2026 — AS2 de Construção de Interfaces: Projeto UX/UI da MEGA-WR
+
+- Trabalho: processo de design completo documentado em PDF único (`YanSuyama_ProjetoUXUI.pdf`). Pasta própria em `Construção de Interfaces e Experiência do Usuário/AS2 - Projeto UX UI MEGA-WR/`.
+- **Tema escolhido:** o fluxo de solicitação de orçamento do site da MEGA-WR. Decisão do Yan entre três opções (a outra forte era a aprovação de conteúdo agência-cliente na Drip-Plan).
+- **Descoberta que mudou o recorte:** a MEGA-WR **já tem site** (`megawr.com.br`) — o `DOCUMENTO-INSTITUCIONAL.md` em `0-Claude` está desatualizado nesse ponto (registrava "não possui (a criar)", 04/08/2026). Como existe site no ar, o trabalho ganhou avaliação heurística do estado atual e base comparativa antes/depois, em vez de projeto do zero.
+- **Diagnóstico levantado na página (verificado, não suposto):** one-page em Astro com as âncoras `#topo`, `#linhas`, `#personalizacao`, `#clientes`, `#sobre`; **8 botões "Solicitar orçamento", todos para o mesmo link** `wa.me/5519991336523` com mensagem pré-preenchida idêntica; sem formulário; **pedido mínimo de 10 peças não informado em lugar nenhum**; prazo de 20 a 30 dias informado. O site anuncia "Você conta o que precisa" como etapa 1 do processo mas não oferece onde contar.
+- **Contradições no enunciado** (ele traz duas listas de requisitos que divergem): wireframes "média ou alta" × "alta" fidelidade; teste com "duas" × "três" pessoas. Regra adotada: seguir sempre o mais exigente — alta fidelidade e 3 participantes. A segunda lista ainda exige resultado quantitativo (tempo de tarefa e satisfação), o que a primeira não pede.
+- **Decisão de ferramenta do Yan:** produzir wireframes e protótipo aqui, sem Figma. Risco registrado com ele — o item 3.2 nomeia Figma/XD/Sketch explicitamente. Mitigação disponível se quiser depois: plugin html.to.design para importar as telas prontas ao Figma.
+- Criados `TRABALHO.md` (11 seções, com contexto e avaliação heurística já em rascunho e marcadores `[AGUARDA PESQUISA]` no que depende de gente real) e `Pesquisa/ROTEIRO-entrevista.md` (recrutamento, entrevista em 4 blocos, tarefa de observação no site atual e ficha de registro).
+- **Caminho crítico é do Yan:** 2 entrevistas e 3 testes de protótipo com pessoas reais (família e amigos). Nada de persona ou resultado de teste inventado — além de fraude acadêmica, é o que denuncia trabalho genérico.
+
 ## 09/09/2026 — Pasta versionada no GitHub
 
 - `git init` na raiz e push para **`techgoldenia-coder/Faculdade`** — repositório **privado** (confirmado: a API do GitHub responde 404 sem autenticação). O repo estava vazio; este é o commit inicial.

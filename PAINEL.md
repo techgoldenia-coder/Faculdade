@@ -18,6 +18,9 @@
 
 | Prazo | Matéria | Entrega | Peso | Status |
 |---|---|---|---|---|
+| `[dd/mm — confirmar]` | Construção de Interfaces | AS2 — Projeto UX/UI (PDF único) | `[?]` | Versão preliminar pronta (pesquisa simulada) — falta validar com 3 pessoas reais |
+| `[dd/mm — confirmar]` | Gestão de Anúncios | AS2 — Análise de resultados e otimização do plano de mídia MEGA-WR (apresentação em PDF, individual) | `[?]` | Rascunho pronto (24 slides) — revisar e exportar PDF |
+| `[dd/mm — confirmar]` | Gestão de Conteúdo | AS2 — Planejamento estratégico de conteúdo MEGA-WR (relatório, individual, sem template) | `[?]` | Rascunho completo (partes 1 a 3) — aguarda revisão do Yan |
 | `[dd/mm]` | `[matéria]` | `[AS1 / prova / seminário]` | | Não iniciado |
 
 ## Datas do semestre 2026/2

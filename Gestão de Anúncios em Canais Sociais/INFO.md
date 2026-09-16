@@ -29,6 +29,7 @@ Fundamentos de marketing digital e canais de marketing; conceito de mídia e pla
 | Avaliação | Peso | Formato | Prazo | Nota |
 |---|---|---|---|---|
 | **AS1 — Plano de Mídia** | `[?]` | trabalho em grupo (até 4) — .docx + planilha | `[PREENCHER]` | — |
+| **AS2 — Análise de resultados e otimização do plano de mídia** | `[?]` | apresentação em PDF (feita individualmente) | `[PREENCHER]` | — |
 | `[PREENCHER — demais avaliações]` | | | | |
 
 ## Bibliografia (das referências das unidades)
@@ -69,3 +70,5 @@ A matéria mais diretamente aplicável ao meu trabalho. Plano de mídia, verba, 
 - [ ] Anotações limpas por unidade
 - [x] AS1 — Plano de Mídia MEGA-WR redigido (falta preencher capa e revisar)
 - [ ] AS1 entregue
+- [x] AS2 — rascunho completo (24 slides + planilha de dados); falta revisar, preencher professor(a) e exportar PDF
+- [ ] AS2 entregue

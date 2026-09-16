@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo — Orçamento MEGA-WR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Saira:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vermelho:#CC1F24; --vermelho-esc:#A8181C; --azul:#1F3F9C; --azul-claro:#EEF2FB;
+  --ink:#16181D; --smoke:#5F6672; --linha:#E4E6EA; --fundo:#F4F5F7;
+  --ok:#166534; --ok-bg:#ECFDF3; --alerta:#92400E; --alerta-bg:#FFF7ED; --alerta-borda:#FDBA74;
+  --erro:#B91C1C; --erro-bg:#FEF2F2;
+  --r:12px;
+  --display:"Saira",system-ui,sans-serif; --sans:"Inter",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:#DDE1E7}
+body{font-family:var(--sans);color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+a{color:var(--azul)}
+:focus-visible{outline:3px solid var(--azul);outline-offset:2px}
+.app{max-width:390px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;position:relative}
+body.shot .app{min-height:0}
+.faixa-prot{background:var(--ink);color:#C9CDD4;font-size:11px;text-align:center;padding:5px 8px;letter-spacing:.02em}
+.ic{width:20px;height:20px;flex:none;display:inline-block;vertical-align:middle}
+
+/* Botões */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;font-weight:600;min-height:48px;padding:0 18px;width:100%;text-decoration:none}
+.btn.primario{background:var(--azul);color:#fff}
+.btn.primario:hover{background:#17307A}
+.btn.primario[aria-disabled="true"]{background:#B7C1E0;color:#fff;cursor:not-allowed}
+.btn.contorno{border:1.5px solid var(--ink);color:var(--ink);min-height:44px}
+.btn.secundario{border:1.5px solid var(--linha);color:var(--ink);min-height:44px;font-size:14px}
+.btn.grande{font-size:16px;min-height:52px}
+
+/* Home */
+.top-home{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--linha)}
+.top-home .logo{height:28px}
+.menu{width:44px;height:44px;display:grid;place-items:center}
+.wa-direto{background:var(--azul);color:#fff;border-radius:50%}
+.hero{position:relative;color:#fff;overflow:hidden}
+.hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,18,.55),rgba(10,12,18,.88))}
+.hero-txt{position:relative;padding:36px 20px 28px}
+.hero h1{font-family:var(--display);font-size:32px;line-height:1.05;font-weight:800;margin-bottom:12px}
+.hero h1 em{font-style:normal;color:#FF6B6F}
+.hero p{color:#E4E6EA;margin-bottom:20px}
+.garantias{list-style:none;margin-top:14px;display:grid;gap:6px;font-size:14px;color:#fff}
+.garantias li{display:flex;gap:8px;align-items:center}
+.garantias .ic{width:18px;height:18px;color:#6EE7A0}
+.bloco{padding:28px 16px}
+.bloco.alt{background:var(--fundo)}
+.rotulo{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--vermelho);margin-bottom:4px}
+.h2{font-family:var(--display);font-size:24px;line-height:1.1;font-weight:700;margin-bottom:16px}
+.card-linha{border:1px solid var(--linha);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+.card-linha img{width:100%;height:130px;object-fit:cover;display:block}
+.card-linha div{padding:14px}
+.card-linha h3{font-family:var(--display);font-size:20px}
+.card-linha p{color:var(--smoke);font-size:14px;margin:2px 0 12px}
+details{background:#fff;border:1px solid var(--linha);border-radius:10px;margin-bottom:8px}
+summary{padding:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:8px}
+summary::after{content:"+";font-size:20px;line-height:1;color:var(--smoke)}
+details[open] summary::after{content:"–"}
+details p{padding:0 14px 14px;color:var(--smoke);font-size:14px}
+.rodape{background:var(--ink);color:#C9CDD4;padding:22px 16px;font-size:13px}
+.rodape img{height:24px;margin-bottom:10px}
+
+/* Fluxo */
+.top-fluxo{display:flex;align-items:center;gap:6px;padding:8px 8px 8px 4px;border-bottom:1px solid var(--linha)}
+.voltar{width:44px;height:44px;display:grid;place-items:center}
+.tf-txt{flex:1;display:flex;flex-direction:column;line-height:1.2}
+.tf-txt strong{font-size:16px}
+.tf-txt span{font-size:12px;color:var(--smoke)}
+.salvar{display:flex;align-items:center;gap:4px;font-size:14px;font-weight:600;color:var(--azul);min-height:44px;padding:0 10px}
+.salvar .ic{width:18px;height:18px}
+.tf-esp{width:44px}
+.stepper{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px 12px 4px}
+.stepper li{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--smoke);text-align:center;position:relative}
+.stepper li span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--fundo);color:var(--smoke);border:1.5px solid var(--linha)}
+.stepper li.atual{color:var(--ink);font-weight:600}
+.stepper li.atual span{background:var(--vermelho);border-color:var(--vermelho);color:#fff}
+.stepper li.feito span{background:var(--ok);border-color:var(--ok);color:#fff}
+.stepper li.feito span .ic{width:14px;height:14px}
+.conteudo{padding:16px;flex:1}
+.conteudo h2{font-family:var(--display);font-size:22px;line-height:1.15;margin-bottom:4px}
+.conteudo .lead{color:var(--smoke);font-size:14px;margin-bottom:16px}
+.titulo-campo{font-size:14px;font-weight:700;margin:18px 0 8px}
+.acao{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--linha);padding:12px 16px 16px}
+body.shot .acao{position:static}
+.dica{font-size:13px;color:var(--smoke);text-align:center;margin-bottom:8px}
+
+/* Seleções */
+.segmento{display:grid;grid-template-columns:repeat(3,1fr);background:var(--fundo);border-radius:10px;padding:4px;gap:4px}
+.segmento button{min-height:40px;border-radius:8px;font-size:14px;font-weight:600;color:var(--smoke)}
+.segmento button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.lista{display:grid;gap:8px;margin-top:12px}
+.item{display:flex;align-items:center;gap:12px;border:1.5px solid var(--linha);border-radius:var(--r);padding:12px;text-align:left;width:100%;min-height:64px}
+.item .ic-peca{width:40px;height:40px;border-radius:8px;background:var(--fundo);display:grid;place-items:center;flex:none;color:var(--ink)}
+.item .ic-peca svg{width:28px;height:28px}
+.item .txt{flex:1;display:flex;flex-direction:column;line-height:1.25}
+.item .txt b{font-size:15px}
+.item .txt small{font-size:12.5px;color:var(--smoke);margin-top:2px}
+.item .marca{width:22px;height:22px;border-radius:50%;border:2px solid var(--linha);flex:none;display:grid;place-items:center}
+.item[aria-pressed="true"]{border-color:var(--vermelho);background:#FFF8F8}
+.item[aria-pressed="true"] .marca{background:var(--vermelho);border-color:var(--vermelho);color:#fff}
+.item[aria-pressed="true"] .marca .ic{width:14px;height:14px}
+.item .foto{width:56px;height:56px;border-radius:8px;object-fit:cover;flex:none}
+.campo{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.campo label{font-size:14px;font-weight:600}
+.campo label small{font-weight:400;color:var(--smoke)}
+.campo input{border:1.5px solid var(--linha);border-radius:10px;min-height:48px;padding:0 12px;font-size:15px;background:#fff}
+.campo input::placeholder{color:#8A909A}
+.campo.com-erro input{border-color:var(--erro)}
+.msg-erro{font-size:13px;color:var(--erro);display:flex;gap:4px;align-items:center}
+.msg-erro .ic{width:16px;height:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--linha);border-radius:999px;min-height:40px;padding:0 14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{border-color:var(--vermelho);background:#FFF8F8;color:var(--vermelho-esc);font-weight:600}
+.chip .ic{width:16px;height:16px}
+.info{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--smoke);background:var(--fundo);border-radius:10px;padding:10px 12px;margin-top:14px}
+.info .ic{width:18px;height:18px;color:var(--azul);margin-top:1px}
+
+/* Quantidade */
+.medidor{border:1.5px solid var(--linha);border-radius:var(--r);padding:12px;margin:4px 0 14px}
+.med-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.med-top strong{font-size:20px;font-family:var(--display)}
+.med-top span{font-size:13px;color:var(--smoke);display:flex;gap:4px;align-items:center}
+.medidor.ok{border-color:#86EFAC;background:var(--ok-bg)}
+.medidor.ok .med-top span{color:var(--ok);font-weight:600}
+.medidor.baixo{border-color:var(--alerta-borda);background:var(--alerta-bg)}
+.barra{height:8px;border-radius:99px;background:rgba(0,0,0,.08);overflow:hidden;position:relative}
+.barra span{position:absolute;inset:0 auto 0 0;background:var(--alerta-borda);border-radius:99px}
+.medidor.ok .barra span{background:var(--ok)}
+.total-simples{font-size:15px;margin:4px 0 12px}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tam{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--linha);border-radius:10px;padding:4px 4px 4px 12px}
+.tam > span{font-weight:700;font-size:14px}
+.stp{display:flex;align-items:center}
+.stp button{width:40px;height:40px;border-radius:8px;font-size:20px;font-weight:600;color:var(--azul)}
+.stp button:hover{background:var(--azul-claro)}
+.stp output{min-width:24px;text-align:center;font-weight:600}
+.stp.grande output{min-width:48px;font-size:22px;font-family:var(--display)}
+.toggle{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--linha);border-radius:var(--r);padding:12px;margin-bottom:14px;cursor:pointer}
+.toggle input{position:absolute;opacity:0;pointer-events:none}
+.toggle .tg{width:40px;height:24px;border-radius:99px;background:#CBD0D8;position:relative;flex:none;margin-top:1px;transition:.15s}
+.toggle .tg::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.toggle input:checked + .tg{background:var(--azul)}
+.toggle input:checked + .tg::after{left:19px}
+.toggle input:focus-visible + .tg{outline:3px solid var(--azul);outline-offset:2px}
+.toggle b{display:block;font-size:14px}
+.toggle small{display:block;font-size:13px;color:var(--smoke)}
+.aviso{border-radius:var(--r);padding:14px;margin:14px 0 4px;font-size:14px}
+.aviso strong{display:block;font-size:15px;margin-bottom:2px}
+.aviso.erro{background:var(--erro-bg);border:1.5px solid #FCA5A5;color:#7F1D1D}
+.aviso.alerta{background:var(--alerta-bg);border:1.5px solid var(--alerta-borda);color:#431407}
+.aviso p{margin-bottom:10px}
+.opcao{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid var(--alerta-borda);border-radius:10px;padding:10px 12px;margin-bottom:8px;min-height:56px}
+.opcao > .ic{color:var(--azul)}
+.opcao span{flex:1;display:flex;flex-direction:column;line-height:1.25}
+.opcao b{font-size:14px;color:var(--ink)}
+.opcao small{font-size:12.5px;color:var(--smoke)}
+.aviso .mini{font-size:12.5px;margin:6px 0 0;color:#6B3A13}
+
+/* Personalização */
+.diagrama{display:flex;gap:10px;justify-content:center;background:var(--fundo);border-radius:var(--r);padding:12px;margin-bottom:10px}
+.diagrama figure{text-align:center;font-size:11px;color:var(--smoke)}
+.diagrama svg{width:130px;height:120px;display:block}
+.upload{border:1.5px dashed #AEB4BE;border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px;width:100%;text-align:left}
+.upload.enviado{border-style:solid;border-color:#86EFAC;background:var(--ok-bg)}
+.upload .ic{width:24px;height:24px;color:var(--azul)}
+.upload.enviado .ic{color:var(--ok)}
+.upload span{display:flex;flex-direction:column;line-height:1.3}
+.upload small{color:var(--smoke);font-size:12.5px}
+
+/* Resumo */
+.resumo{border:1px solid var(--linha);border-radius:var(--r);overflow:hidden}
+.linha-res{display:flex;gap:10px;padding:12px;border-bottom:1px solid var(--linha);align-items:flex-start}
+.linha-res:last-child{border-bottom:0}
+.linha-res .rot{font-size:12px;color:var(--smoke);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.linha-res .val{font-size:14px;font-weight:500}
+.linha-res div{flex:1}
+.editar{font-size:13px;font-weight:600;color:var(--azul);min-height:32px;padding:0 4px}
+.preco{background:var(--azul-claro);color:#172B6B}
+.preco .rot{color:#172B6B}
+.bolha-wrap{background:#EFE7DE;border-radius:var(--r);padding:12px;margin-top:8px}
+.bolha{background:#D9FDD3;border-radius:10px 2px 10px 10px;padding:10px 12px;font-size:13.5px;white-space:pre-line;color:#111B21;margin-left:18px;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bolha .hora{display:block;text-align:right;font-size:11px;color:#667781;margin-top:4px}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.nota-troca{display:flex;gap:6px;font-size:12.5px;color:var(--smoke);margin-bottom:10px;align-items:flex-start}
+.nota-troca .ic{width:16px;height:16px;margin-top:1px}
+
+/* Confirmação e grupo */
+.sucesso{text-align:center;padding:8px 0 16px}
+.sucesso .circ{width:64px;height:64px;border-radius:50%;background:var(--ok-bg);color:var(--ok);display:grid;place-items:center;margin:0 auto 10px}
+.sucesso .circ .ic{width:34px;height:34px}
+.wa-top{background:#075E54;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r) var(--r) 0 0}
+.wa-top img{width:32px;height:32px;border-radius:50%;background:#fff;object-fit:contain;padding:3px}
+.wa-top span{display:flex;flex-direction:column;line-height:1.2;font-size:14px;font-weight:600}
+.wa-top small{font-weight:400;font-size:11.5px;opacity:.85}
+.wa-corpo{border-radius:0 0 var(--r) var(--r);margin-top:0}
+.proximos{list-style:none;margin-top:6px}
+.proximos li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.proximos li:last-child{border-bottom:0}
+.proximos .n{font-family:var(--display);font-weight:700;color:var(--vermelho);width:24px;flex:none}
+.codigo{display:flex;justify-content:space-between;align-items:center;background:var(--fundo);border-radius:10px;padding:10px 12px;font-size:13px;margin-top:12px}
+.codigo b{font-family:var(--display);font-size:16px;letter-spacing:.04em}
+.link-box{display:flex;align-items:center;gap:8px;border:1.5px solid var(--linha);border-radius:10px;padding:10px 12px;font-size:14px;font-weight:600;color:var(--azul);margin:8px 0}
+.participantes{border:1px solid var(--linha);border-radius:var(--r);margin-top:8px}
+.participantes li{list-style:none;display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid var(--linha);font-size:14px}
+.participantes li:last-child{border-bottom:0}
+.participantes li.vazio{color:#8A909A;font-style:italic}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);width:calc(min(390px,100vw) - 32px);background:var(--ink);color:#fff;border-radius:10px;padding:12px 14px;font-size:14px;display:flex;gap:8px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:5}
+.toast .ic{color:#6EE7A0}
+body.shot .toast{position:static;transform:none;margin:0 16px 12px;width:auto}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* ============================================================
+   Protótipo navegável — fluxo de orçamento MEGA-WR
+   Projeto acadêmico (PUCPR). Não envia mensagens nem dados.
+   ?v=1  -> versão inicial (antes do feedback)
+   ?v=2  -> versão revisada (padrão)
+   ?p=   -> abre um estado pronto (usado para gerar as imagens)
+   ============================================================ */
+const params = new URLSearchParams(location.search);
+const V = params.get('v') === '1' ? 1 : 2;
+const PRESET = params.get('p');
+if (PRESET) document.body.classList.add('shot');
+
+const svg = (d, extra = '') => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${d}</svg>`;
+const ic = {
+  menu: svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  voltar: svg('<path d="M15 18l-6-6 6-6"/>'),
+  seta: svg('<path d="M9 18l6-6-6-6"/>'),
+  check: svg('<path d="M20 6L9 17l-5-5"/>'),
+  salvar: svg('<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>'),
+  grupo: svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14.5c2.4 0 4 1.5 4.6 4"/>'),
+  mais: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),
+  info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+  alerta: svg('<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>'),
+  cadeado: svg('<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+  upload: svg('<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>'),
+  arquivo: svg('<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 15l2 2 4-4"/>'),
+  whats: svg('<path d="M3.5 20.5l1.3-4A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 1c-1.2-.5-2.4-1.7-2.9-2.9l1-1-1-2z"/>'),
+  baixar: svg('<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>'),
+  copiar: svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>'),
+  link: svg('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
+  duvida: svg('<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01"/>'),
+};
+const peca = {
+  camiseta: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M17 7l-9 4-5 9 7 3.5 2-3.5V42h24V20l2 3.5 7-3.5-5-9-9-4c-1 3-4 4.5-7 4.5S18 10 17 7z"/></svg>',
+  polo: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M17 7l-9 4-5 9 7 3.5 2-3.5V42h24V20l2 3.5 7-3.5-5-9-9-4-7 5z"/><path d="M17 7l3 6 4-1 4 1 3-6M24 12v8"/></svg>',
+  jaleco: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M17 5l-8 4-5 17 6 1.5 2-6V45h24V21.5l2 6 6-1.5-5-17-8-4-7 10z"/><path d="M24 15v30M29 31h5"/></svg>',
+  calca: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M14 5h20l3 38h-9.5L24 20l-3.5 23H11z"/><path d="M14 10h20"/></svg>',
+  bermuda: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 10h24l3 24h-11l-4-12-4 12H9z"/><path d="M12 15h24"/></svg>',
+  duvida: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="24" cy="24" r="17"/><path d="M19 19a5 5 0 1 1 7 4.6c-1.2.6-2 1.8-2 3.4M24 33h.01"/></svg>',
+};
+
+const TAMANHOS = {
+  padrao: ['PP','P','M','G','GG','G1','G2','G3','G4','G5'],
+  ate_g4: ['PP','P','M','G','GG','G1','G2','G3','G4'],
+  jaleco: ['PP','P','M','G','GG','EXG'],
+  social: ['1','2','3','4','5','6'],
+};
+const LINHAS = {
+  saude: { nome: 'Saúde', img: 'img/linha-saude.jpg', desc: 'Jalecos e scrubs para clínicas e profissionais da saúde.', produtos: [
+    { id: 'jaleco', nome: 'Jaleco', icone: 'jaleco', tam: 'jaleco', tecido: 'microfibra de gabardine' },
+    { id: 'scrub', nome: 'Scrub (pijama hospitalar)', icone: 'camiseta', tam: 'padrao', tecido: 'microfibra de gabardine' },
+  ]},
+  uniformes: { nome: 'Uniformes', img: 'img/linha-uniformes.jpg', desc: 'Profissional, escolar, esportivo e industrial.', produtos: [
+    { id: 'polo', nome: 'Camisa polo', icone: 'polo', tam: 'padrao', tecido: 'PV anti-pilling ou piquet' },
+    { id: 'camiseta', nome: 'Camiseta', icone: 'camiseta', tam: 'padrao', tecido: 'PV anti-pilling ou algodão' },
+    { id: 'social', nome: 'Camisa social', icone: 'polo', tam: 'social', tecido: 'tricoline ou algodão' },
+    { id: 'brim', nome: 'Calça de brim', icone: 'calca', tam: 'padrao', tecido: 'brim' },
+  ]},
+  fitness: { nome: 'Fitness', img: 'img/linha-fitness.jpg', desc: 'Leggings, bermudas e camisetas dry-fit.', produtos: [
+    { id: 'legging', nome: 'Calça legging', icone: 'calca', tam: 'ate_g4', tecido: 'poliamida' },
+    { id: 'dryfit', nome: 'Camiseta dry-fit', icone: 'camiseta', tam: 'padrao', tecido: 'dry-fit' },
+    { id: 'bermuda', nome: 'Bermuda', icone: 'bermuda', tam: 'padrao', tecido: 'poliamida' },
+  ]},
+};
+const TECNICAS = [
+  { id: 'bordado', nome: 'Bordado', img: 'img/pers-bordado.jpg', txt: 'Mais durável e com aspecto sério. Padrão em jaleco e camisa social.' },
+  { id: 'silk', nome: 'Silk', img: 'img/pers-silk.jpg', txt: 'Melhor custo em volume, para artes com poucas cores.' },
+  { id: 'dtf', nome: 'DTF (estampa digital)', img: 'img/pers-dtf.jpg', txt: 'Arte colorida, degradê ou detalhe fino, sem limite de cores.' },
+  { id: 'indicar', nome: 'Não sei, quero indicação', txt: 'A MEGA-WR indica a melhor opção no orçamento.' },
+];
+const POSICOES = [
+  { id: 'peito-esq', nome: 'Peito esquerdo' },
+  { id: 'peito-dir', nome: 'Peito direito' },
+  { id: 'manga', nome: 'Manga' },
+  { id: 'costas', nome: 'Costas' },
+];
+const ENTREGAS = { loja: 'Retirar na loja (Leme)', local: 'Entrega local', envio: 'Envio para outra cidade' };
+const ENTREGAS_MSG = { loja: 'retirada na loja', local: 'entrega local', envio: 'envio para outra cidade' };
+const ETAPAS = ['Produto', 'Quantidade', 'Personalização', 'Entrega'];
+const ORDEM = ['home', 'passo1', 'passo2', 'passo3', 'passo4', 'resumo', 'confirmacao'];
+const FAQ = [
+  { q: 'Qual é o pedido mínimo?', a: V === 2 ? '10 peças por modelo. Precisa de menos? Monte um pedido em grupo com colegas: cada um escolhe tamanho e nome pelo mesmo link.' : '10 peças por modelo.' },
+  { q: 'Qual é o prazo de produção?', a: 'De 20 a 30 dias após a confirmação do pedido.' },
+  { q: 'Vocês entregam na minha cidade?', a: 'Sim. Retirada na loja em Leme, entrega local ou envio para todo o Brasil.' },
+  { q: 'Qual a diferença entre bordado, silk e DTF?', a: 'Bordado é mais durável e sóbrio. Silk tem melhor custo em volume, com poucas cores. DTF é uma estampa digital para artes coloridas e detalhes finos.' },
+  { q: 'Como é definido o preço?', a: 'Não há tabela fixa: o valor depende do modelo, do tecido, da quantidade e da personalização. Você recebe o orçamento pelo WhatsApp.' },
+  { q: 'Quais tamanhos vocês fazem?', a: 'Do infantil ao plus size, conforme o modelo escolhido.' },
+];
+
+/* ---------------- Estado ---------------- */
+const S = {
+  tela: 'home', soFaq: false,
+  linha: 'uniformes', produto: null, cor: '',
+  qtd: {}, semTamanho: false, totalAprox: 10,
+  tecnica: null, posicoes: [], nomePeca: false, logo: null,
+  cidade: '', entrega: null, prazo: 'padrao', data: '', contato: '', empresa: '', whats: '',
+  tentou: false, toast: null, codigo: 'MWR-4821',
+};
+const BASE_POLO = { linha: 'uniformes', produto: 'polo', cor: 'Branca', qtd: { P: 2, M: 6, G: 5, GG: 2 } };
+const BASE_PERS = { tecnica: 'bordado', posicoes: ['peito-esq'], logo: 'logo-empresa.png' };
+const BASE_ENTREGA = { cidade: 'Leme/SP', entrega: 'loja', prazo: 'padrao', contato: 'Patrícia', empresa: 'Clínica exemplo', whats: '(19) 9 0000-0000' };
+const PRESETS = {
+  home: {},
+  faq: { soFaq: true },
+  p1: { tela: 'passo1', linha: 'uniformes', produto: 'polo', cor: 'Branca' },
+  'p2-ok': { tela: 'passo2', ...BASE_POLO },
+  'p2-baixo': { tela: 'passo2', linha: 'saude', produto: 'scrub', cor: 'Azul marinho', qtd: { M: 2 } },
+  'p2-sem': { tela: 'passo2', linha: 'uniformes', produto: 'polo', cor: 'Branca', semTamanho: true, totalAprox: 14, toast: 'Pedido salvo neste aparelho. Continue quando tiver os tamanhos.' },
+  p3: { tela: 'passo3', ...BASE_POLO, ...BASE_PERS },
+  p4: { tela: 'passo4', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+  'p4-erro': { tela: 'passo4', ...BASE_POLO, ...BASE_PERS, cidade: 'Leme/SP', entrega: 'loja', contato: 'Patrícia', tentou: true },
+  resumo: { tela: 'resumo', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+  confirmacao: { tela: 'confirmacao', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+  grupo: { tela: 'grupo', linha: 'saude', produto: 'scrub', cor: 'Azul marinho', qtd: { M: 2 }, tecnica: 'bordado', nomePeca: true, posicoes: ['peito-esq'] },
+};
+if (PRESET && PRESETS[PRESET]) Object.assign(S, PRESETS[PRESET]);
+
+/* ---------------- Utilidades ---------------- */
+const produtoAtual = () => Object.values(LINHAS).flatMap(l => l.produtos).find(p => p.id === S.produto);
+const somaTamanhos = () => Object.values(S.qtd).reduce((a, b) => a + b, 0);
+const total = () => (S.semTamanho ? S.totalAprox : somaTamanhos());
+const pecas = n => `${n} ${n === 1 ? 'peça' : 'peças'}`;
+const grade = () => Object.entries(S.qtd).filter(([, n]) => n > 0).map(([t, n]) => `${t} ${n}`).join(' · ');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function valido(tela) {
+  if (tela === 'passo1') return !!S.produto;
+  if (tela === 'passo2') return total() >= 10;
+  if (tela === 'passo3') return !!S.tecnica;
+  if (tela === 'passo4') return S.cidade.trim() && S.entrega && S.contato.trim() && S.whats.trim();
+  return true;
+}
+
+function mensagem() {
+  const p = produtoAtual();
+  const tec = TECNICAS.find(t => t.id === S.tecnica);
+  const pos = S.posicoes.map(id => POSICOES.find(x => x.id === id).nome.toLowerCase()).join(' e ');
+  const linhas = [
+    'Olá! Vim pelo site e montei este pedido de orçamento:',
+    `• Produto: ${p ? p.nome : '—'} (${LINHAS[S.linha].nome})${S.cor ? ` — cor ${S.cor.toLowerCase()}` : ''}`,
+    `• Quantidade: ${pecas(total())}${S.semTamanho ? ' (tamanhos a enviar)' : ` — ${grade()}`}`,
+    `• Personalização: ${tec ? (S.tecnica === 'indicar' ? 'quero indicação' : tec.nome.split(' (')[0].toLowerCase()) : '—'}${pos ? ` no ${pos}` : ''}${S.logo ? ' (logo anexado)' : ''}${S.nomePeca ? ' + nome em cada peça' : ''}`,
+    `• Entrega: ${S.cidade || '—'} — ${S.entrega ? ENTREGAS_MSG[S.entrega] : '—'} — ${S.prazo === 'padrao' ? 'prazo padrão' : `preciso até ${S.data || '—'}`}`,
+    `• Contato: ${S.contato || '—'}${S.empresa ? ` — ${S.empresa}` : ''}`,
+    `Código do pedido: ${S.codigo}`,
+  ];
+  return linhas.join('\n');
+}
+
+/* ---------------- Blocos comuns ---------------- */
+const faixa = () => `<div class="faixa-prot">Protótipo acadêmico · PUCPR · não é o site oficial</div>`;
+
+function topo(n, titulo, voltarPara) {
+  const salvar = V === 2 && n ? `<button class="salvar" data-acao="salvar">${ic.salvar} Salvar</button>` : '<span class="tf-esp"></span>';
+  const stepper = n ? `<ol class="stepper" aria-label="Etapas do orçamento">${ETAPAS.map((e, i) => {
+      const cls = i + 1 < n ? 'feito' : i + 1 === n ? 'atual' : '';
+      return `<li class="${cls}" ${i + 1 === n ? 'aria-current="step"' : ''}><span>${i + 1 < n ? ic.check : i + 1}</span>${e}</li>`;
+    }).join('')}</ol>` : '';
+  return `<header class="top-fluxo">
+    <button class="voltar" data-acao="ir" data-tela="${voltarPara}" aria-label="Voltar">${ic.voltar}</button>
+    <div class="tf-txt"><strong>${titulo}</strong>${n ? `<span>Passo ${n} de 4 · ${ETAPAS[n - 1]}</span>` : ''}</div>
+    ${salvar}
+  </header>${stepper}`;
+}
+
+function rodapeAcao(label, tela, dica) {
+  const ok = valido(tela);
+  return `<div class="acao">${!ok && dica ? `<p class="dica">${dica}</p>` : ''}
+    <button class="btn primario grande" data-acao="avancar" ${ok ? '' : 'aria-disabled="true"'}>${label}</button></div>`;
+}
+
+const toast = () => (S.toast ? `<div class="toast" role="status">${ic.check}${S.toast}</div>` : '');
+
+/* ---------------- Telas ---------------- */
+function home() {
+  const faq = `<section class="bloco alt" id="faq">
+      <p class="rotulo">Dúvidas frequentes</p>
+      <h2 class="h2">Antes de pedir seu orçamento</h2>
+      ${FAQ.map((f, i) => `<details ${i < 2 ? 'open' : ''}><summary>${f.q}</summary><p>${f.a}</p></details>`).join('')}
+    </section>`;
+  const rodape = `<footer class="rodape"><img src="img/logo-branca.png" alt="MEGA-WR Confecções"><p>Rua Bernardino de Campos, 1055 — Leme/SP<br>Segunda a sexta, 9h–18h · Sábado, 9h–12h</p></footer>`;
+  const topoHome = `<header class="top-home"><img class="logo" src="img/logo.png" alt="MEGA-WR Confecções"><span style="display:flex;gap:4px"><a class="menu wa-direto" href="#" aria-label="Falar direto no WhatsApp">${ic.whats}</a><button class="menu" aria-label="Abrir menu">${ic.menu}</button></span></header>`;
+  if (S.soFaq) return topoHome + faq + rodape;
+  return `${topoHome}
+    <section class="hero">
+      <img class="hero-bg" src="img/hero.jpg" alt="">
+      <div class="hero-scrim"></div>
+      <div class="hero-txt">
+        <h1>Uniformes que <em>profissionalizam</em> sua empresa.</h1>
+        <p>Confecção própria em Leme/SP para empresas, escolas, clínicas e academias.</p>
+        <button class="btn primario grande" data-acao="iniciar">Montar meu orçamento</button>
+        ${V === 2 ? `<ul class="garantias">
+          <li>${ic.check} Mínimo de 10 peças por modelo</li>
+          <li>${ic.check} Produção em 20 a 30 dias</li>
+          <li>${ic.check} 4 passos, sem cadastro</li></ul>` : ''}
+      </div>
+    </section>
+    <section class="bloco" id="linhas">
+      <p class="rotulo">Linhas</p>
+      <h2 class="h2">Escolha a linha e comece o orçamento</h2>
+      ${Object.entries(LINHAS).map(([id, l]) => `<article class="card-linha">
+        <img src="${l.img}" alt="Peças da linha ${l.nome} produzidas pela MEGA-WR">
+        <div><h3>${l.nome}</h3><p>${l.desc}</p>
+        <button class="btn contorno" data-acao="iniciar" data-linha="${id}">Orçar linha ${l.nome} ${ic.seta}</button></div>
+      </article>`).join('')}
+    </section>
+    ${faq}${rodape}`;
+}
+
+function passo1() {
+  const l = LINHAS[S.linha];
+  return `${topo(1, 'Solicitar orçamento', 'home')}
+  <main class="conteudo">
+    <h2>O que você precisa?</h2>
+    <p class="lead">Escolha a linha e o modelo. O tecido a MEGA-WR indica no orçamento.</p>
+    <div class="segmento" role="group" aria-label="Linha">
+      ${Object.entries(LINHAS).map(([id, x]) => `<button data-acao="linha" data-linha="${id}" aria-pressed="${S.linha === id}">${x.nome}</button>`).join('')}
+    </div>
+    <div class="lista">
+      ${l.produtos.map(p => `<button class="item" data-acao="produto" data-produto="${p.id}" aria-pressed="${S.produto === p.id}">
+        <span class="ic-peca">${peca[p.icone]}</span>
+        <span class="txt"><b>${p.nome}</b><small>Tamanhos ${TAMANHOS[p.tam][0]} a ${TAMANHOS[p.tam].at(-1)} · ${p.tecido}</small></span>
+        <span class="marca">${S.produto === p.id ? ic.check : ''}</span>
+      </button>`).join('')}
+    </div>
+    ${S.produto ? `<div class="campo"><label for="cor">Cor da peça <small>(opcional)</small></label>
+      <input id="cor" data-campo="cor" value="${esc(S.cor)}" placeholder="Ex.: azul marinho"></div>` : ''}
+  </main>
+  ${rodapeAcao('Continuar', 'passo1', 'Escolha um modelo para continuar')}`;
+}
+
+function passo2() {
+  const p = produtoAtual();
+  const t = total();
+  const falta = Math.max(0, 10 - t);
+  let medidor, aviso = '';
+  if (V === 2) {
+    medidor = `<div class="medidor ${t >= 10 ? 'ok' : t > 0 ? 'baixo' : ''}">
+      <div class="med-top"><strong>${pecas(t)}</strong><span>${t >= 10 ? `${ic.check} Atende o pedido mínimo` : 'Mínimo: 10 peças por modelo'}</span></div>
+      <div class="barra"><span style="width:${Math.min(100, t * 10)}%"></span></div></div>`;
+    if (t > 0 && t < 10) aviso = `<div class="aviso alerta" role="status">
+      <strong>Faltam ${pecas(falta)} para o mínimo de 10</strong>
+      <p>A MEGA-WR produz por lote, a partir de 10 peças do mesmo modelo. Para seguir, você pode:</p>
+      <button class="opcao" data-acao="ir" data-tela="grupo">${ic.grupo}<span><b>Montar pedido em grupo</b><small>Convide colegas por link. Cada um escolhe tamanho e nome.</small></span>${ic.seta}</button>
+      <button class="opcao" data-acao="focar">${ic.mais}<span><b>Aumentar a quantidade</b><small>Some peças em outros tamanhos até chegar a 10.</small></span>${ic.seta}</button>
+      <p class="mini">Agora não? Siga <b>@megawr_uniformes</b> e fale com a gente quando sua equipe precisar.</p>
+    </div>`;
+  } else {
+    medidor = `<p class="total-simples">Total: <b>${pecas(t)}</b></p>`;
+    if (t > 0 && t < 10) aviso = `<div class="aviso erro" role="alert"><strong>Pedido mínimo: 10 peças por modelo.</strong>Aumente a quantidade para continuar.</div>`;
+  }
+  const toggle = V === 2 ? `<label class="toggle"><input type="checkbox" data-campo="semTamanho" ${S.semTamanho ? 'checked' : ''}>
+      <span class="tg"></span><span><b>Ainda não tenho os tamanhos</b><small>Informe só o total agora e envie a grade depois.</small></span></label>` : '';
+  const corpo = S.semTamanho
+    ? `<p class="titulo-campo">Quantas peças, aproximadamente?</p>
+       <div class="tam" style="justify-content:space-between;padding:8px 8px 8px 14px"><span>Total</span>
+         <div class="stp grande"><button data-acao="aprox" data-d="-1" aria-label="Diminuir">−</button><output>${S.totalAprox}</output><button data-acao="aprox" data-d="1" aria-label="Aumentar">+</button></div></div>
+       <div class="info">${ic.info}<span>Use <b>Salvar</b>, no topo, para voltar a este pedido quando tiver os tamanhos da equipe.</span></div>`
+    : `<p class="titulo-campo" id="grade">Quantidade por tamanho</p>
+       <div class="grade">${TAMANHOS[p.tam].map(tz => `<div class="tam"><span>${tz}</span><div class="stp">
+         <button data-acao="qtd" data-tam="${tz}" data-d="-1" aria-label="Diminuir ${tz}">−</button><output>${S.qtd[tz] || 0}</output>
+         <button data-acao="qtd" data-tam="${tz}" data-d="1" aria-label="Aumentar ${tz}">+</button></div></div>`).join('')}</div>`;
+  return `${topo(2, 'Solicitar orçamento', 'passo1')}${toast()}
+  <main class="conteudo">
+    <h2>Quantas peças e quais tamanhos?</h2>
+    <p class="lead">${p.nome}${S.cor ? ` · ${esc(S.cor)}` : ''}</p>
+    ${medidor}${aviso}${toggle}${corpo}
+  </main>
+  ${rodapeAcao('Continuar', 'passo2', V === 2 ? '' : 'Informe pelo menos 10 peças para continuar')}`;
+}
+
+function passo3() {
+  const frente = ['peito-esq', 'peito-dir', 'manga'];
+  const marcador = (id, cx, cy, n) => `<circle cx="${cx}" cy="${cy}" r="9" fill="${S.posicoes.includes(id) ? '#CC1F24' : '#fff'}" stroke="#CC1F24" stroke-width="2"/>
+      <text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="11" font-weight="700" fill="${S.posicoes.includes(id) ? '#fff' : '#CC1F24'}">${n}</text>`;
+  const camisa = `<path d="M40 12l-22 9-14 24 17 8 6-9v68h66V44l6 9 17-8-14-24-22-9c-3 8-10 12-20 12s-17-4-20-12z" fill="#fff" stroke="#16181D" stroke-width="2" stroke-linejoin="round"/>`;
+  return `${topo(3, 'Solicitar orçamento', 'passo2')}
+  <main class="conteudo">
+    <h2>Como personalizar?</h2>
+    <p class="lead">Não precisa saber os termos técnicos: escolha pela descrição.</p>
+    <div class="lista">
+      ${TECNICAS.map(t => `<button class="item" data-acao="tecnica" data-id="${t.id}" aria-pressed="${S.tecnica === t.id}">
+        ${t.img ? `<img class="foto" src="${t.img}" alt="">` : `<span class="ic-peca" style="width:56px;height:56px">${peca.duvida}</span>`}
+        <span class="txt"><b>${t.nome}</b><small>${t.txt}</small></span>
+        <span class="marca">${S.tecnica === t.id ? ic.check : ''}</span></button>`).join('')}
+    </div>
+    ${S.tecnica ? `
+    <p class="titulo-campo">Onde aplicar? <span style="font-weight:400;color:var(--smoke)">(pode marcar mais de um)</span></p>
+    <div class="diagrama" aria-hidden="true">
+      <figure><svg viewBox="0 0 150 130">${camisa}${marcador('peito-dir', 57, 48, 2)}${marcador('peito-esq', 93, 48, 1)}${marcador('manga', 20, 38, 3)}</svg>Frente</figure>
+      <figure><svg viewBox="0 0 150 130">${camisa}${marcador('costas', 75, 70, 4)}</svg>Costas</figure>
+    </div>
+    <div class="chips" role="group" aria-label="Posição da personalização">
+      ${POSICOES.map((x, i) => `<button class="chip" data-acao="posicao" data-id="${x.id}" aria-pressed="${S.posicoes.includes(x.id)}">${S.posicoes.includes(x.id) ? ic.check : `${i + 1}.`} ${x.nome}</button>`).join('')}
+    </div>
+    <p class="titulo-campo">Logo ou arte</p>
+    <button class="upload ${S.logo ? 'enviado' : ''}" data-acao="logo">${S.logo ? ic.arquivo : ic.upload}
+      <span>${S.logo ? `<b>${S.logo}</b><small>Enviado · toque para trocar</small>` : `<b>Enviar logo</b><small>PNG, JPG ou PDF. Não tem agora? Envie depois pelo WhatsApp.</small>`}</span></button>
+    <label class="toggle" style="margin-top:12px"><input type="checkbox" data-campo="nomePeca" ${S.nomePeca ? 'checked' : ''}>
+      <span class="tg"></span><span><b>Nome em cada peça</b><small>Ex.: nome e registro profissional bordados.</small></span></label>` : ''}
+  </main>
+  ${rodapeAcao('Continuar', 'passo3', 'Escolha uma opção de personalização')}`;
+}
+
+function passo4() {
+  const erro = (campo, msg) => (S.tentou && !String(S[campo] || '').trim() ? `<span class="msg-erro">${ic.alerta}${msg}</span>` : '');
+  const cls = campo => (S.tentou && !String(S[campo] || '').trim() ? 'campo com-erro' : 'campo');
+  return `${topo(4, 'Solicitar orçamento', 'passo3')}
+  <main class="conteudo">
+    <h2>Entrega e contato</h2>
+    <p class="lead">Última etapa. Depois você revisa tudo antes de enviar.</p>
+    <div class="${cls('cidade')}"><label for="cidade">Cidade de entrega</label>
+      <input id="cidade" data-campo="cidade" value="${esc(S.cidade)}" placeholder="Ex.: Leme/SP" autocomplete="address-level2">${erro('cidade', 'Informe a cidade para calcularmos a entrega')}</div>
+    <p class="titulo-campo">Como prefere receber?</p>
+    <div class="chips" role="group" aria-label="Forma de entrega">
+      ${Object.entries(ENTREGAS).map(([id, n]) => `<button class="chip" data-acao="entrega" data-id="${id}" aria-pressed="${S.entrega === id}">${n}</button>`).join('')}
+    </div>
+    <p class="titulo-campo">Prazo</p>
+    <div class="chips" role="group" aria-label="Prazo">
+      <button class="chip" data-acao="prazo" data-id="padrao" aria-pressed="${S.prazo === 'padrao'}">Padrão: 20 a 30 dias</button>
+      <button class="chip" data-acao="prazo" data-id="data" aria-pressed="${S.prazo === 'data'}">Preciso até uma data</button>
+    </div>
+    ${S.prazo === 'data' ? `<div class="campo"><label for="data">Data limite</label><input id="data" type="date" data-campo="data" value="${esc(S.data)}"></div>` : ''}
+    <div class="${cls('contato')}"><label for="contato">Seu nome</label>
+      <input id="contato" data-campo="contato" value="${esc(S.contato)}" autocomplete="name">${erro('contato', 'Informe seu nome')}</div>
+    <div class="campo"><label for="empresa">Empresa ou instituição <small>(opcional)</small></label>
+      <input id="empresa" data-campo="empresa" value="${esc(S.empresa)}" autocomplete="organization"></div>
+    <div class="${cls('whats')}"><label for="whats">WhatsApp</label>
+      <input id="whats" type="tel" data-campo="whats" value="${esc(S.whats)}" placeholder="(DDD) 9 0000-0000" autocomplete="tel">${erro('whats', 'Informe seu WhatsApp: é por ele que o orçamento chega')}</div>
+    <div class="info">${ic.cadeado}<span>Não pedimos CNPJ nem cadastro. Seus dados servem só para responder este orçamento.</span></div>
+  </main>
+  <div class="acao"><button class="btn primario grande" data-acao="avancar">Revisar pedido</button></div>`;
+}
+
+function resumo() {
+  const p = produtoAtual();
+  const tec = TECNICAS.find(t => t.id === S.tecnica);
+  const linha = (rot, val, tela) => `<div class="linha-res"><div><p class="rot">${rot}</p><p class="val">${val}</p></div>
+    ${tela ? `<button class="editar" data-acao="ir" data-tela="${tela}">Editar</button>` : ''}</div>`;
+  const extras = V === 2 ? `<div class="duas">
+      <button class="btn secundario" data-acao="baixar">${ic.baixar} Baixar resumo</button>
+      <button class="btn secundario" data-acao="copiar">${ic.copiar} Copiar texto</button></div>` : '';
+  return `${topo(0, 'Revise antes de enviar', 'passo4')}
+  <main class="conteudo">
+    <div class="resumo">
+      ${linha('Produto', `${p.nome} · ${LINHAS[S.linha].nome}${S.cor ? ` · ${esc(S.cor)}` : ''}`, 'passo1')}
+      ${linha('Quantidade', `${pecas(total())}${S.semTamanho ? ' · tamanhos a enviar' : ` · ${grade()}`}`, 'passo2')}
+      ${linha('Personalização', `${tec.nome}${S.posicoes.length ? ` · ${S.posicoes.map(id => POSICOES.find(x => x.id === id).nome).join(', ')}` : ''}${S.logo ? ' · logo enviado' : ''}`, 'passo3')}
+      ${linha('Entrega', `${esc(S.cidade)} · ${ENTREGAS[S.entrega]} · ${S.prazo === 'padrao' ? '20 a 30 dias' : `até ${esc(S.data)}`}`, 'passo4')}
+      ${linha('Contato', `${esc(S.contato)}${S.empresa ? ` · ${esc(S.empresa)}` : ''} · ${esc(S.whats)}`, 'passo4')}
+      <div class="linha-res preco"><div><p class="rot">Preço</p><p class="val">Calculado pela MEGA-WR conforme modelo, tecido, quantidade e personalização.</p></div></div>
+    </div>
+    <p class="titulo-campo">Mensagem que será enviada</p>
+    <div class="bolha-wrap"><div class="bolha">${esc(mensagem())}<span class="hora">agora</span></div></div>
+  </main>
+  <div class="acao">
+    <p class="nota-troca">${ic.info}<span>Ao tocar em enviar, o WhatsApp da MEGA-WR abre com esta mensagem pronta. Você ainda pode editar antes de mandar.</span></p>
+    ${extras}
+    <button class="btn primario grande" data-acao="avancar">${ic.whats} Enviar pelo WhatsApp</button>
+  </div>`;
+}
+
+function confirmacao() {
+  return `${topo(0, 'Pedido pronto', 'resumo')}
+  <main class="conteudo">
+    <div class="sucesso"><div class="circ">${ic.check}</div>
+      <h2>Seu pedido foi para o WhatsApp</h2>
+      <p class="lead">No site real, a conversa com a MEGA-WR abriria agora com a mensagem abaixo.</p></div>
+    <div class="wa-top"><img src="img/logo.png" alt=""><span>MEGA-WR Confecções<small>Atendimento: seg. a sex. 9h–18h · sáb. 9h–12h</small></span></div>
+    <div class="bolha-wrap wa-corpo"><div class="bolha">${esc(mensagem())}<span class="hora">agora ✓✓</span></div></div>
+    <div class="codigo"><span>Código do pedido<br><small style="color:var(--smoke)">Use para retomar a conversa</small></span><b>${S.codigo}</b></div>
+    <p class="titulo-campo">O que acontece agora</p>
+    <ol class="proximos">
+      <li><span class="n">01</span><span>A MEGA-WR responde pelo WhatsApp com o orçamento.</span></li>
+      <li><span class="n">02</span><span>Vocês definem modelo e tecido.</span></li>
+      <li><span class="n">03</span><span>Você aprova a personalização antes da produção.</span></li>
+      <li><span class="n">04</span><span>Produção e entrega em 20 a 30 dias.</span></li>
+    </ol>
+  </main>
+  <div class="acao"><button class="btn secundario" data-acao="ir" data-tela="home">Voltar ao site</button></div>`;
+}
+
+function grupo() {
+  const p = produtoAtual();
+  const t = somaTamanhos();
+  return `${topo(0, 'Pedido em grupo', 'passo2')}
+  <main class="conteudo">
+    <h2>Junte colegas e chegue a 10 peças</h2>
+    <p class="lead">${p.nome}${S.cor ? ` · ${esc(S.cor)}` : ''} · bordado${S.nomePeca ? ' com nome em cada peça' : ''}</p>
+    <div class="medidor baixo">
+      <div class="med-top"><strong>${t} de 10 peças</strong><span>faltam ${10 - t}</span></div>
+      <div class="barra"><span style="width:${t * 10}%"></span></div></div>
+    <p class="titulo-campo">Link do grupo</p>
+    <div class="link-box">${ic.link}<span>megawr.com.br/g/SCRUB-7K2P</span></div>
+    <div class="duas">
+      <button class="btn secundario" data-acao="copiar">${ic.copiar} Copiar link</button>
+      <button class="btn secundario" data-acao="copiar">${ic.whats} Enviar no grupo</button></div>
+    <p class="titulo-campo">Participantes</p>
+    <ul class="participantes">
+      <li><span><b>Você</b></span><span>${grade()} · ${pecas(t)}</span></li>
+      <li class="vazio"><span>Aguardando colegas…</span><span></span></li>
+    </ul>
+    <div class="info">${ic.info}<span>Cada colega abre o link e informa tamanho e nome. Quando o grupo somar 10 peças, você recebe um aviso e envia o orçamento com todas as peças juntas, já separadas por pessoa.</span></div>
+  </main>
+  <div class="acao"><button class="btn primario grande" aria-disabled="true">Enviar orçamento do grupo</button>
+    <p class="dica" style="margin:8px 0 0">Disponível quando o grupo chegar a 10 peças</p></div>`;
+}
+
+const TELAS = { home, passo1, passo2, passo3, passo4, resumo, confirmacao, grupo };
+
+function render(rolar) {
+  document.getElementById('app').innerHTML = faixa() + TELAS[S.tela]();
+  if (rolar) window.scrollTo(0, 0);
+}
+
+function ir(tela) {
+  S.tela = tela; S.tentou = false; S.toast = null; S.soFaq = false;
+  render(true);
+}
+
+/* ---------------- Interação ---------------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-acao]');
+  if (!el) return;
+  const d = el.dataset;
+  switch (d.acao) {
+    case 'iniciar': if (d.linha) { S.linha = d.linha; S.produto = null; } ir('passo1'); break;
+    case 'ir': ir(d.tela); break;
+    case 'linha': S.linha = d.linha; S.produto = null; render(); break;
+    case 'produto': S.produto = d.produto; S.qtd = {}; render(); break;
+    case 'qtd': S.qtd[d.tam] = Math.max(0, (S.qtd[d.tam] || 0) + Number(d.d)); render(); break;
+    case 'aprox': S.totalAprox = Math.max(1, S.totalAprox + Number(d.d)); render(); break;
+    case 'focar': document.getElementById('grade')?.scrollIntoView({ behavior: 'smooth' }); break;
+    case 'tecnica': S.tecnica = d.id; render(); break;
+    case 'posicao': S.posicoes = S.posicoes.includes(d.id) ? S.posicoes.filter(x => x !== d.id) : [...S.posicoes, d.id]; render(); break;
+    case 'logo': S.logo = S.logo ? null : 'logo-empresa.png'; render(); break;
+    case 'entrega': S.entrega = d.id; render(); break;
+    case 'prazo': S.prazo = d.id; render(); break;
+    case 'salvar': S.toast = 'Pedido salvo neste aparelho. Continue quando tiver os tamanhos.'; render(); setTimeout(() => { S.toast = null; render(); }, 3500); break;
+    case 'copiar': case 'baixar':
+      S.toast = d.acao === 'baixar' ? 'Resumo baixado (simulação do protótipo).' : 'Copiado (simulação do protótipo).';
+      render(); setTimeout(() => { S.toast = null; render(); }, 2500); break;
+    case 'avancar': {
+      if (el.getAttribute('aria-disabled') === 'true') return;
+      if (!valido(S.tela)) { S.tentou = true; render(); return; }
+      const i = ORDEM.indexOf(S.tela);
+      ir(ORDEM[i + 1]);
+      break;
+    }
+  }
+});
+document.addEventListener('input', e => {
+  const c = e.target.dataset.campo;
+  if (!c) return;
+  if (e.target.type === 'checkbox') { S[c] = e.target.checked; render(); return; }
+  S[c] = e.target.value;
+  // Atualiza só o que depende do valor, sem perder o foco do campo.
+  const btn = document.querySelector('.acao [data-acao="avancar"]');
+  if (btn && S.tela !== 'passo4') {
+    if (valido(S.tela)) btn.removeAttribute('aria-disabled');
+    else btn.setAttribute('aria-disabled', 'true');
+  }
+});
+
+// Toasts do resumo e do grupo precisam aparecer também nessas telas.
+const _resumo = resumo, _grupo = grupo;
+TELAS.resumo = () => _resumo().replace('<main class="conteudo">', `${toast()}<main class="conteudo">`);
+TELAS.grupo = () => _grupo().replace('<main class="conteudo">', `${toast()}<main class="conteudo">`);
+
+render();
+</script>
+</body>
+</html>

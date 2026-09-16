@@ -27,7 +27,8 @@ Presença digital e content marketing; social listening e monitoramento; segment
 | Avaliação | Peso | Formato | Prazo | Nota |
 |---|---|---|---|---|
 | **AS1** | `[?]` | múltipla escolha, 2 pts/questão | — | **10** |
-| `[PREENCHER — AS2 / prova]` | | | | |
+| **AS2** | `[?]` | relatório estruturado, individual, sem template (ABNT padrão) — planejamento de conteúdo, métricas, community management e crise; marca: MEGA-WR | `[confirmar]` | |
+| `[PREENCHER — prova]` | | | | |
 
 ## Bibliografia (das referências das unidades)
 
