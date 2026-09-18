@@ -1,0 +1,244 @@
+/* Tokens — base: Sequel (referencias/DESIGN-sequel.md)
+   Desvio deliberado: o sistema original e 0% cromatico. Aqui o azul e o vermelho
+   da MEGA-WR entram como acento pontual (logo, hairlines, hover). */
+
+:root {
+  /* Tema claro: fundo branco, azul principal e vermelho como apoio. */
+  --void: #ffffff;      /* fundo da pagina */
+  --white: #ffffff;     /* superficies e texto reverso (sobre azul/foto) */
+  --ink: #16181d;       /* texto principal */
+  --charcoal: #f4f5f7;  /* superficie de card / secao alternada */
+  --graphite: #e4e6ea;  /* hairlines e bordas */
+  --cream: #f5f5f0;
+  --smoke: #5f6672;     /* texto secundario */
+
+  --azul: #1f3f9c;
+  --azul-escuro: #17307a;
+  --vermelho: #cc1f24;
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Saira Variable', 'Inter Variable', system-ui, sans-serif;
+
+  --page: 1200px;
+  --faixa: 26px; /* faixa "Protótipo acadêmico" no topo */
+  --ease: cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* O header e fixo: sem isso a ancora para a secao embaixo dele. */
+  scroll-padding-top: calc(80px + var(--faixa));
+}
+
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: calc(68px + var(--faixa));
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* height: auto porque o <Image> do Astro grava width/height na tag; sem isso o
+   atributo height vira altura fixa e anula o aspect-ratio definido no CSS. */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Layout */
+
+.wrap {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  padding: 96px 0;
+}
+
+@media (max-width: 700px) {
+  section {
+    padding: 64px 0;
+  }
+}
+
+/* Tipografia */
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--smoke);
+  margin: 0 0 24px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(40px, 7vw, 88px);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  font-size: clamp(30px, 4.5vw, 54px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+h3 {
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+/* A palavra emocional da headline. Sem italico em nenhum ponto do site —
+   o destaque vem do peso, nao da inclinacao. */
+em {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 500;
+}
+
+p {
+  margin: 0;
+  color: var(--smoke);
+  text-wrap: pretty;
+}
+
+/* Botoes */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.25s var(--ease);
+}
+
+.btn-primary {
+  background: var(--azul);
+  color: var(--white);
+  box-shadow: rgba(31, 63, 156, 0.25) 0 6px 20px;
+}
+
+.btn-primary:hover {
+  background: var(--azul-escuro);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  border: 1px solid var(--graphite);
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  border-color: var(--ink);
+}
+
+/* Superficies */
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--graphite);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  background: rgba(200, 200, 200, 0.1);
+  backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow:
+    rgba(0, 0, 0, 0.35) 0 10px 30px,
+    rgba(255, 255, 255, 0.08) 0 1px 0 inset;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto;
+  }
+}
+
+/* Versao de teste (AS2 PUCPR) */
+html.v1 .so-v2 {
+  display: none !important;
+}
+
+html.v2 .so-v1,
+html:not(.v1) .so-v1 {
+  display: none !important;
+}
+
+/* Modo de captura: altura fixa do hero e recorte de uma secao. */
+html.shot .hero {
+  min-height: 820px !important;
+}
+
+html[data-secao] main > :not([data-manter]):not(#duvidas) {
+  display: none !important;
+}
+
+html[data-secao] footer,
+html.shot footer {
+  display: none !important;
+}
+
+html.shot .orc {
+  min-height: 0 !important;
+}
+
+/* Nas figuras do PDF a faixa de protótipo sai; no site publicado ela continua. */
+html.shot {
+  --faixa: 0px;
+}
+
+html.shot .faixa-prot {
+  display: none !important;
+}

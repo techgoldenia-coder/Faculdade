@@ -9,10 +9,11 @@
 
 | Arquivo | O que é |
 |---|---|
-| `AS2 - Otimização do Plano de Mídia MEGA-WR (rascunho).pptx` | Apresentação de 24 slides, editável, com gráficos nativos do PowerPoint. **É o entregável** — exportar em PDF depois da revisão. |
+| `YanSuyama_AS2_GestaoAnuncios.pdf` | **Arquivo de entrega** — 24 páginas, exportado pelo PowerPoint em 18/09/2026. |
+| `AS2 - Otimização do Plano de Mídia MEGA-WR.pptx` | Versão editável da apresentação, com gráficos nativos. Se mudar algo, exportar o PDF de novo. |
 | `AS2 - Dados hipotéticos MEGA-WR.xlsx` | Todos os números da apresentação, com fórmulas (CTR, CPL, ROAS, verba). Aba `Leads (modelo)` é o controle de leads proposto no plano de ação. |
 
-Para exportar: no PowerPoint, **Arquivo → Exportar → Criar PDF/XPS**.
+Para reexportar: no PowerPoint, **Arquivo → Exportar → Criar PDF/XPS**, com o mesmo nome do PDF.
 
 ## O que o enunciado pede
 
@@ -111,10 +112,10 @@ As letras a–f seguem a regra de mesmo autor e mesmo ano. A AS1 desta matéria 
 
 ## Checklist antes de entregar
 
-- [ ] Preencher professor(a) na capa (slide 1)
+- [x] Professora na capa (slide 1): Cláudia Osna Geber
 - [ ] Ler os 24 slides e ajustar ao meu tom
 - [ ] Conferir se algum número mudou na revisão — se mudar, mudar também na planilha
-- [ ] Confirmar se o professor aceita citação da unidade como `PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ, 2026a`
-- [ ] Exportar em PDF e abrir o PDF para conferir
+- [x] Ticket médio e formato de citação aprovados pelo Yan (18/09)
+- [x] PDF exportado e conferido (24 páginas, fontes embutidas, metadados com autor e título)
 - [ ] Responde exatamente os 4 itens do enunciado
 - [ ] Nada inventado sem aviso de hipotético

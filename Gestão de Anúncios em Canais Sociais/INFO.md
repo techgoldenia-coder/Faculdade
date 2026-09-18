@@ -1,7 +1,7 @@
 # Gestão de Anúncios em Canais Sociais
 
 - **Semestre:** 2026/2 — **cursando**
-- **Professor(a):** `[PREENCHER]`
+- **Professora:** Cláudia Osna Geber
 - **Formato:** EAD / plataforma PUC-PR
 - **Dia e horário:** `[PREENCHER]`
 
@@ -70,5 +70,5 @@ A matéria mais diretamente aplicável ao meu trabalho. Plano de mídia, verba, 
 - [ ] Anotações limpas por unidade
 - [x] AS1 — Plano de Mídia MEGA-WR redigido (falta preencher capa e revisar)
 - [ ] AS1 entregue
-- [x] AS2 — rascunho completo (24 slides + planilha de dados); falta revisar, preencher professor(a) e exportar PDF
+- [x] AS2 — PDF de entrega pronto (`YanSuyama_AS2_GestaoAnuncios.pdf`); falta leitura final do Yan e envio
 - [ ] AS2 entregue

@@ -10,17 +10,17 @@
 | [Marketing de conteúdo](Marketing de conteúdo/INFO.md) | 2026/1 | Concluída | `[PREENCHER]` |
 | [Processos de decisão e tipos de segmentação](Processos de decisão e tipos de segmentação/INFO.md) | 2026/1 | Concluída | `[PREENCHER]` |
 | [Construção de Interfaces e Experiência do Usuário](Construção de Interfaces e Experiência do Usuário/INFO.md) | 2026/2 | **Cursando** | `[PREENCHER]` |
-| [Gestão de Anúncios em Canais Sociais](Gestão de Anúncios em Canais Sociais/INFO.md) | 2026/2 | **Cursando** | `[PREENCHER]` |
-| [Gestão de Conteúdo em Mídias Sociais](Gestão de Conteúdo em Mídias Sociais/INFO.md) | 2026/2 | **Cursando** | `[PREENCHER]` |
+| [Gestão de Anúncios em Canais Sociais](Gestão de Anúncios em Canais Sociais/INFO.md) | 2026/2 | **Cursando** | Cláudia Osna Geber |
+| [Gestão de Conteúdo em Mídias Sociais](Gestão de Conteúdo em Mídias Sociais/INFO.md) | 2026/2 | **Cursando** | Talita Leuçz (tutoria) |
 | `[PREENCHER — demais matérias de 2026/2]` | 2026/2 | Cursando | |
 
 ## Prazos em aberto
 
 | Prazo | Matéria | Entrega | Peso | Status |
 |---|---|---|---|---|
-| `[dd/mm — confirmar]` | Construção de Interfaces | AS2 — Projeto UX/UI (PDF único) | `[?]` | Versão preliminar pronta (pesquisa simulada) — falta validar com 3 pessoas reais |
-| `[dd/mm — confirmar]` | Gestão de Anúncios | AS2 — Análise de resultados e otimização do plano de mídia MEGA-WR (apresentação em PDF, individual) | `[?]` | Rascunho pronto (24 slides) — revisar e exportar PDF |
-| `[dd/mm — confirmar]` | Gestão de Conteúdo | AS2 — Planejamento estratégico de conteúdo MEGA-WR (relatório, individual, sem template) | `[?]` | Rascunho completo (partes 1 a 3) — aguarda revisão do Yan |
+| 18/09/2026 | Construção de Interfaces | AS2 — Projeto UX/UI (PDF único) | `[?]` | Versão de entrega condensada (24 páginas) — ler, aprovar e enviar |
+| `[dd/mm — confirmar]` | Gestão de Anúncios | AS2 — Análise de resultados e otimização do plano de mídia MEGA-WR (apresentação em PDF, individual) | `[?]` | PDF pronto — ler, aprovar e enviar |
+| `[dd/mm — confirmar]` | Gestão de Conteúdo | AS2 — Planejamento estratégico de conteúdo MEGA-WR (relatório, individual, sem template) | `[?]` | PDF pronto (18 páginas, versão condensada) — ler, aprovar e enviar |
 | `[dd/mm]` | `[matéria]` | `[AS1 / prova / seminário]` | | Não iniciado |
 
 ## Datas do semestre 2026/2

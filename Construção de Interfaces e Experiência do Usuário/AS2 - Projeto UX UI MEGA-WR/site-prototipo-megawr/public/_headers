@@ -1,0 +1,44 @@
+# Regras de cache servidas pelo Cloudflare (Workers static assets).
+# Sem este arquivo tudo sai com "max-age=0, must-revalidate" e o navegador
+# rebaixa imagem e CSS a cada visita.
+
+# Tudo que o build gera em /_astro/ leva hash no nome (index.C9LgWUah.css,
+# hero.DV4Rdtue_duulp.webp). Mudou o arquivo, muda o nome — entao pode ser
+# cacheado para sempre sem risco de servir versao velha.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Imagens de public/ nao tem hash no nome: cache de 7 dias, com
+# stale-while-revalidate para a troca ser silenciosa quando trocarmos o arquivo.
+/img/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# Favicons e icones da raiz, listados um a um de proposito: o curinga `/*.png`
+# tambem casaria /img/logo.png, e a Cloudflare SOMA os cabecalhos de todas as
+# regras que casam — o resultado virava um Cache-Control duplicado e malformado.
+/favicon.ico
+  Cache-Control: public, max-age=604800
+/favicon-16.png
+  Cache-Control: public, max-age=604800
+/favicon-32.png
+  Cache-Control: public, max-age=604800
+/favicon-48.png
+  Cache-Control: public, max-age=604800
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+/icon-192.png
+  Cache-Control: public, max-age=604800
+/icon-512.png
+  Cache-Control: public, max-age=604800
+
+# O HTML nunca e' cacheado no navegador: e' o arquivo que aponta para os
+# demais, entao precisa refletir o deploy novo imediatamente. O cache da
+# borda do Cloudflare continua funcionando normalmente.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Cabecalhos de seguranca — validos para o site inteiro.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN

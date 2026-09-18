@@ -3,6 +3,14 @@
 Uso:  python Entrega/gerar_pdf.py
 Etapas: diagramas SVG -> recortes das telas -> HTML (ABNT) -> PDF pelo Edge
 -> leitura das páginas para numerar o sumário -> PDF final.
+
+Marcadores aceitos em TRABALHO.md:
+  [[QUADRO: título]]            título numerado acima da tabela seguinte
+  [[FONTE: texto]]              fonte abaixo de quadro ou figura
+  [[FIG: arquivo | título | fonte | largura]]
+  [[GRADE: arq1 ; arq2 ; ... | leg1 ; leg2 ; ... | título | fonte | colunas | largura de cada tela | alinhar]]
+                                ("alinhar" é opcional: põe as legendas na mesma linha)
+  arquivo.png@y0-y1             recorta a imagem entre as alturas y0 e y1 (px)
 """
 import html
 import pathlib
@@ -17,7 +25,7 @@ from PIL import Image
 AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parent
 FIG = AQUI / "figuras"
-TELAS = RAIZ / "Prototipo" / "telas"
+TELAS = RAIZ / "Prototipo" / "telas-site"  # capturas da versão de teste do site
 EDGE = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 SAIDA = AQUI / "YanSuyama_ProjetoUXUI.pdf"
 
@@ -84,7 +92,7 @@ def sitemap():
     esq = [("Linhas: Saúde · Uniformes · Fitness", "normal"), ("Personalização: bordado · silk · DTF", "normal"),
            ("Clientes", "normal"), ("Como trabalhamos", "normal"), ("Dúvidas frequentes", "novo"), ("Sobre e contato", "normal")]
     dir_ = [("1. Produto", "novo"), ("2. Quantidade e tamanhos", "novo"), ("3. Personalização", "novo"),
-            ("4. Entrega e contato", "novo"), ("Resumo e envio", "novo"), ("WhatsApp da MEGA-WR", "externo")]
+            ("4. Entrega e contato", "novo"), ("Resumo e envio", "novo"), ("WhatsApp ou e-mail", "externo")]
     ys = [177 + i * 44 for i in range(6)]
     c.append(seta([(45, 140), (45, ys[-1])], ponta=False))
     c.append(seta([(445, 140), (445, ys[-1])], ponta=False))
@@ -129,7 +137,7 @@ def fluxo():
     c.append(seta([(CX, 289), (CX, 316)]))
     c.append(caixa(CX, 338, 250, 42, ["Passo 2 · Quantidade e tamanhos"], "novo"))
     c.append(seta([(CX + 125, 338), (RX - 100, 338)], tracejada=True, ponta=False))
-    c.append(caixa(RX, 338, 200, 42, ["Sem os tamanhos?", "informa o total e salva"], "nota"))
+    c.append(caixa(RX, 338, 200, 42, ["Sem os tamanhos?", "total, planilha e salvo"], "nota"))
     c.append(seta([(CX, 359), (CX, 389)]))
     c.append(losango(CX, 425, 230, 70, ["Total ≥ 10 peças?"]))
     c.append(seta([(CX + 115, 425), (RX - 102, 425)], "Não", ((CX + 115 + RX - 100) / 2, 418)))
@@ -141,6 +149,8 @@ def fluxo():
     c.append(caixa(CX, 510, 250, 42, ["Passo 3 · Personalização"], "novo"))
     c.append(seta([(CX, 531), (CX, 558)]))
     c.append(caixa(CX, 580, 250, 42, ["Passo 4 · Entrega e contato"], "novo"))
+    c.append(seta([(CX + 125, 580), (RX - 100, 580)], tracejada=True, ponta=False))
+    c.append(caixa(RX, 580, 200, 42, ["Compra pela empresa?", "CNPJ, nota e pagamento"], "nota"))
     c.append(seta([(CX, 601), (CX, 629)]))
     c.append(losango(CX, 665, 230, 70, ["Nome, WhatsApp e", "cidade preenchidos?"]))
     c.append(seta([(CX - 115, 665), (LX + 72, 665)], "Não", ((CX - 115 + LX + 70) / 2, 658)))
@@ -155,7 +165,7 @@ def fluxo():
     c.append(seta([(LX - 70, 835), (14, 835), (14, 268), (CX - 127, 268)], tracejada=True))
     c.append('<text x="26" y="560" font-size="10" fill="#374151" transform="rotate(-90 26 560)" text-anchor="middle">volta à etapa escolhida</text>')
     c.append(seta([(CX, 870), (CX, 894)], "Não", (CX + 22, 886)))
-    c.append(caixa(CX, 918, 250, 46, ["WhatsApp abre com", "o pedido estruturado"], "externo"))
+    c.append(caixa(CX, 918, 250, 46, ["WhatsApp ou e-mail recebe", "o pedido estruturado"], "externo"))
     c.append(seta([(CX, 941), (CX, 962)]))
     c.append(elipse(CX, 986, 290, 46, ["Fim", "MEGA-WR responde com o orçamento"]))
     return svg(720, 1015, "".join(c))
@@ -165,24 +175,26 @@ def preparar_figuras():
     FIG.mkdir(exist_ok=True)
     (FIG / "sitemap.svg").write_text(sitemap(), encoding="utf-8")
     (FIG / "fluxo.svg").write_text(fluxo(), encoding="utf-8")
-    for v in ("v1", "v2"):
-        im = Image.open(TELAS / f"01-home-{v}.png")
-        im.crop((0, 0, im.width, 1500)).save(FIG / f"01-home-{v}-topo.png", optimize=True)
 
 
 # ---------------------------------------------------------------- markdown -> html
-def achar(nome):
+def caminho(nome):
+    """Localiza a imagem; "arquivo.png@y0-y1" gera um recorte entre as alturas y0 e y1 (px)."""
+    if "@" in nome:
+        base, faixa = nome.split("@")
+        y0, y1 = (int(v) for v in faixa.split("-"))
+        destino = FIG / f"{pathlib.Path(base).stem}_{y0}-{y1}.png"
+        im = Image.open(caminho(base))
+        im.crop((0, y0, im.width, min(y1, im.height))).save(destino, optimize=True)
+        return destino
     for pasta in (FIG, TELAS):
         if (pasta / nome).exists():
-            return (pasta / nome).as_uri()
+            return pasta / nome
     raise FileNotFoundError(nome)
 
 
-AVISO = ('<div class="aviso"><strong>ATENÇÃO: PESQUISA SIMULADA.</strong> As entrevistas apresentadas neste trabalho são '
-         'uma simulação, elaborada para estruturar o projeto e apresentar a proposta de solução. Elas não foram realizadas '
-         'com pessoas reais. As seções 2, 3, 4, 7.3 e 8 e o Apêndice B dependem dessa simulação e serão refeitas com '
-         'entrevistas e testes com usuários reais.</div>')
-TAG = '<p class="tag">Conteúdo baseado na pesquisa simulada (ver aviso na seção 2).</p>'
+def achar(nome):
+    return caminho(nome).as_uri()
 
 
 def converter(md_texto):
@@ -191,39 +203,48 @@ def converter(md_texto):
     md_texto = re.sub(r"<!--.*?-->", "", md_texto, flags=re.S)
 
     def fig(m):
-        arq, titulo, fonte, larg = [p.strip() for p in m.group(1).split("|")]
+        arq, titulo, fonte, larg = [p.strip() for p in m.group(2).split("|")]
         cont["fig"] += 1
         return (f'\n<figure class="fig"><figcaption><b>Figura {cont["fig"]}</b> – {html.escape(titulo)}</figcaption>'
                 f'<img src="{achar(arq)}" style="width:{larg}"><p class="fonte">Fonte: {fonte}</p></figure>\n')
 
-    def par(m):
-        arqs, legs, titulo, fonte = [p.strip() for p in m.group(1).split("|")]
+    def grade(m):
+        arqs, legs, titulo, fonte, cols, larg, *opc = [p.strip() for p in m.group(2).split("|")]
         cont["fig"] += 1
         itens = ""
-        for letra, a, l in zip("ab", arqs.split(";"), legs.split(";")):
-            itens += f'<div><img src="{achar(a.strip())}"><p class="sub">({letra}) {html.escape(l.strip())}</p></div>'
-        return (f'\n<figure class="fig par"><figcaption><b>Figura {cont["fig"]}</b> – {html.escape(titulo)}</figcaption>'
-                f'<div class="lado">{itens}</div><p class="fonte">Fonte: {fonte}</p></figure>\n')
+        for letra, a, l in zip("abcdefghij", arqs.split(";"), legs.split(";")):
+            itens += (f'<div><img src="{achar(a.strip())}" style="width:{larg}">'
+                      f'<p class="sub">({letra}) {html.escape(l.strip())}</p></div>')
+        # "alinhar": legendas na mesma linha, para telas de alturas parecidas
+        classe = "fig grade alinhada" if "alinhar" in opc else "fig grade"
+        return (f'\n<figure class="{classe}"><figcaption><b>Figura {cont["fig"]}</b> – {html.escape(titulo)}</figcaption>'
+                f'<div class="itens" style="grid-template-columns:repeat({cols},{larg})">{itens}</div>'
+                f'<p class="fonte">Fonte: {fonte}</p></figure>\n')
 
     def quadro(m):
         cont["quadro"] += 1
         return f'\n<p class="quadro-titulo"><b>Quadro {cont["quadro"]}</b> – {html.escape(m.group(1).strip())}</p>\n'
 
-    md_texto = re.sub(r"\[\[FIG:(.+?)\]\]", fig, md_texto)
-    md_texto = re.sub(r"\[\[PAR:(.+?)\]\]", par, md_texto)
+    # figuras simples e pares numeradas juntas, na ordem em que aparecem no texto
+    md_texto = re.sub(r"\[\[(FIG|GRADE):(.+?)\]\]", lambda m: (fig if m.group(1) == "FIG" else grade)(m), md_texto)
     md_texto = re.sub(r"\[\[QUADRO:(.+?)\]\]", quadro, md_texto)
     md_texto = re.sub(r"\[\[FONTE:(.+?)\]\]", lambda m: f'\n<p class="fonte">Fonte: {m.group(1).strip()}</p>\n', md_texto)
-    md_texto = md_texto.replace("[[AVISO-SIMULACAO]]", "\n" + AVISO + "\n")
-    md_texto = md_texto.replace("[[TAG-SIMULACAO]]", "\n" + TAG + "\n")
-    md_texto = md_texto.replace("[[QUEBRA]]", "")
     corpo = markdown.markdown(md_texto, extensions=["extra", "sane_lists"])
     # tabelas: marca como quadro
     corpo = corpo.replace("<table>", '<table class="quadro">')
     # títulos sem número (Referências, Apêndices) ficam centralizados
     corpo = re.sub(r"<h1>((?:Referências|Apêndice)[^<]*)</h1>", r'<h1 class="sem-num">\1</h1>', corpo)
+    corpo = corpo.replace('<h1 class="sem-num">Referências', '<h1 class="sem-num ref-titulo">Referências')
     # referências: alinhadas à esquerda, sem recuo (NBR 6023)
-    corpo = re.sub(r'(<h1 class="sem-num">Referências</h1>)(.*?)(?=<h1)',
+    corpo = re.sub(r'(<h1 class="sem-num ref-titulo">Referências</h1>)(.*?)(?=<h1)',
                    lambda m: m.group(1) + '<div class="ref">' + m.group(2) + '</div>', corpo, flags=re.S)
+    corpo = corpo.replace('<h1 class="sem-num">Apêndice B', '<h1 class="sem-num segue">Apêndice B')
+    corpo = re.sub(r'(<h1 class="sem-num">Apêndice A[^<]*</h1>)(.*?)(?=<h1)',
+                   lambda m: m.group(1) + '<div class="colunas">' + m.group(2) + '</div>', corpo, flags=re.S)
+    # apêndices em espaçamento simples, como material de apoio
+    k = corpo.find('<h1 class="sem-num">Apêndice')
+    if k >= 0:
+        corpo = corpo[:k] + '<div class="apendice">' + corpo[k:] + '</div>'
     # ids para o sumário
     n = [0]
 
@@ -253,22 +274,25 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 12pt; line-height: 
 .sumario { break-after: page; }
 .sumario h1 { text-align: center; }
 .toc { list-style: none; padding: 0; margin: 0; }
-.toc li { display: flex; align-items: baseline; gap: 6px; line-height: 1.5; }
+.toc li { display: flex; align-items: baseline; gap: 6px; line-height: 1.2; }
 .toc li .t { white-space: nowrap; overflow: hidden; }
 .toc li .dots { flex: 1; border-bottom: 1px dotted #000; transform: translateY(-4px); }
 .toc li.n1 { font-weight: bold; text-transform: uppercase; }
 .toc li.n2 { padding-left: 0; }
 .conteudo p { text-align: justify; text-indent: 1.25cm; margin: 0 0 6pt; orphans: 3; widows: 3; }
 .conteudo li p, .conteudo td p, .conteudo blockquote p { text-indent: 0; }
-h1 { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin: 0 0 18pt; break-before: page; break-after: avoid; }
-h1.sem-num { text-align: center; }
+h1 { font-size: 12pt; font-weight: bold; text-transform: uppercase; margin: 24pt 0 12pt; break-after: avoid; }
+h1.sem-num { text-align: center; break-before: page; margin-top: 0; }
+h1.sem-num.ref-titulo { break-before: auto; margin-top: 24pt; }
+h1.sem-num.segue { break-before: auto; margin-top: 18pt; }
+h3 { font-size: 11pt; font-weight: bold; margin: 12pt 0 4pt; break-after: avoid; }
 h2 { font-size: 12pt; font-weight: bold; margin: 18pt 0 6pt; break-after: avoid; }
 ul, ol { margin: 0 0 8pt; padding-left: 1.25cm; text-align: justify; }
 li { margin-bottom: 3pt; }
 blockquote { margin: 8pt 0 10pt 1.25cm; padding: 2pt 0 2pt 10pt; border-left: 3px solid #888; font-size: 11pt; line-height: 1.4; }
 code { font-family: Consolas, monospace; font-size: 10.5pt; background: #f1f1f1; padding: 0 3px; }
-table.quadro { width: 100%; border-collapse: collapse; font-size: 10pt; line-height: 1.3; margin: 0 0 2pt; break-inside: auto; }
-table.quadro th, table.quadro td { border: 1px solid #000; padding: 4pt 5pt; text-align: left; vertical-align: top; }
+table.quadro { width: 100%; border-collapse: collapse; font-size: 10pt; line-height: 1.15; margin: 0 0 2pt; break-inside: auto; }
+table.quadro th, table.quadro td { border: 1px solid #000; padding: 3pt 4pt; text-align: left; vertical-align: top; }
 table.quadro th { background: #EDEDED; }
 table.quadro tr { break-inside: avoid; }
 .quadro-titulo { text-indent: 0 !important; font-size: 10pt; margin: 12pt 0 3pt !important; text-align: left !important; break-after: avoid; }
@@ -278,14 +302,18 @@ table.quadro tr { break-inside: avoid; }
 .fig img { max-width: 100%; border: 1px solid #ccc; }
 .fig img[src$=".svg"] { border: 0; }
 .fig .fonte { text-align: left !important; }
-.par .lado { display: flex; gap: 0.6cm; justify-content: center; align-items: flex-start; }
-.par .lado div { width: 7.4cm; }
-.par .lado img { width: auto; max-width: 7.4cm; max-height: 17.5cm; }
-.par .sub { text-indent: 0 !important; font-size: 10pt; text-align: center !important; margin: 3pt 0 0 !important; line-height: 1.25; }
-.aviso { border: 2.5px solid #C00000; background: #FFF4F4; color: #C00000; padding: 8pt 10pt; font-size: 11pt; line-height: 1.4;
-  text-align: justify; margin: 0 0 12pt; }
+.grade .itens { display: grid; gap: 6pt 0.35cm; justify-content: center; align-items: start; }
+.grade img { display: block; }
+.grade.alinhada .itens { align-items: stretch; }
+.grade.alinhada .itens > div { display: flex; flex-direction: column; justify-content: space-between; }
+.grade .sub { text-indent: 0 !important; font-size: 10pt; text-align: center !important; margin: 3pt 0 0 !important; line-height: 1.25; }
 .ref p { text-align: left !important; text-indent: 0 !important; line-height: 1.15; margin: 0 0 12pt !important; }
-.tag { color: #C00000 !important; font-weight: bold; font-size: 10.5pt; text-indent: 0 !important; margin: 0 0 10pt !important; }
+.apendice p, .apendice li { font-size: 10pt; line-height: 1.2; }
+.apendice .colunas { column-count: 2; column-gap: 0.8cm; }
+.apendice .colunas p { break-after: avoid; }
+.apendice p { margin-bottom: 4pt !important; }
+.apendice ol { margin-bottom: 4pt; }
+.apendice li { margin-bottom: 1pt; }
 """
 
 
@@ -298,8 +326,9 @@ def montar_html(meta, corpo, paginas=None):
       <div>{meta['instituicao']}<br>{meta['curso']}</div>
       <div>{meta['aluno']}</div>
       <div class="meio">{meta['titulo']}<span>{meta['subtitulo']}</span>
-        <span style="margin-top:28pt">Projeto de UX/UI apresentado à disciplina {meta['disciplina']}.</span></div>
-      <div>{meta['ano']}</div></section>"""
+        <span style="margin-top:28pt">Projeto de UX/UI apresentado à disciplina {meta['disciplina']}.</span>
+        <span>Professor: {meta['professor']}</span></div>
+      <div>{meta['cidade']}<br>{meta['ano']}</div></section>"""
     sumario = f'<section class="sumario"><h1 style="break-before:auto">Sumário</h1><ul class="toc">{"".join(itens)}</ul></section>'
     return f"""<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>{meta['titulo']}</title>
       <style>{CSS}</style></head><body>{capa}{sumario}<main class="conteudo">{corpo}</main></body></html>"""

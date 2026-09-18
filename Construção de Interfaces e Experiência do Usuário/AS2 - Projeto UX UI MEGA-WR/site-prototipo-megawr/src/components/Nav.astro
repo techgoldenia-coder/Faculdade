@@ -1,0 +1,325 @@
+---
+import { empresa, redes, whatsappLink, CTA_PADRAO, ORCAMENTO_URL } from '../config';
+
+const links = [
+  { href: '#linhas', label: 'Linhas' },
+  { href: '#personalizacao', label: 'Personalização' },
+  { href: '#clientes', label: 'Clientes' },
+  { href: '#sobre', label: 'Sobre' },
+  { href: '#duvidas', label: 'Dúvidas' },
+].map((l) => ({ ...l, href: `/${l.href}` }));
+---
+
+<header id="nav">
+  <p class="faixa-prot">Protótipo acadêmico · PUCPR · versão de teste, não é o site oficial</p>
+  <div class="wrap bar">
+    <a href="/" class="logo">
+      <img src="/img/logo.png" alt="MEGA-WR Confecções" width="150" height="27" />
+    </a>
+
+    <nav class="nav-desktop">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="acoes-bar">
+      <a class="btn btn-primary cta" href={ORCAMENTO_URL}>
+        <span class="cta-longo">Montar orçamento</span>
+        <span class="cta-curto">Orçamento</span>
+      </a>
+
+      <button
+        id="menu-toggle"
+        class="hamburguer"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+        aria-controls="menu-mobile"
+      >
+        <span class="traco"></span>
+        <span class="traco"></span>
+        <span class="traco"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu mobile: so existe abaixo de 900px, onde a nav horizontal some. -->
+  <div id="menu-mobile" class="drawer">
+    <nav>
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="drawer-base">
+      <a class="btn btn-primary" href={ORCAMENTO_URL}>Montar meu orçamento</a>
+      <p class="drawer-contato">
+        <a href={whatsappLink(CTA_PADRAO)} target="_blank" rel="noopener">
+          {empresa.whatsappExibicao}
+        </a>
+        {redes.map((r) => (
+          <a href={r.url} target="_blank" rel="noopener">{r.handle}</a>
+        ))}
+      </p>
+    </div>
+  </div>
+</header>
+
+<style>
+  .faixa-prot {
+    margin: 0;
+    height: var(--faixa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: #c9cdd4;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    text-align: center;
+  }
+
+  header {
+    --altura-nav: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: var(--white);
+    border-bottom: 1px solid var(--graphite);
+    transition: box-shadow 0.3s var(--ease);
+  }
+
+  /* Sombra sutil ao rolar, para separar o header branco do conteudo. */
+  header.solid {
+    box-shadow: rgba(22, 24, 29, 0.06) 0 2px 16px;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    height: var(--altura-nav);
+  }
+
+  .logo {
+    flex-shrink: 0;
+  }
+
+  .logo img {
+    width: 150px;
+    height: auto;
+  }
+
+  .nav-desktop {
+    display: flex;
+    gap: 32px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .nav-desktop a {
+    color: var(--ink);
+    opacity: 0.7;
+    transition: opacity 0.2s var(--ease);
+  }
+
+  .nav-desktop a:hover {
+    opacity: 1;
+  }
+
+  .acoes-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .cta {
+    height: 44px;
+  }
+
+  /* O rotulo do CTA encolhe conforme a barra aperta: texto longo -> curto -> icone. */
+  .cta-curto,
+  .cta-icone {
+    display: none;
+  }
+
+  /* Hamburguer */
+  .hamburguer {
+    display: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .traco {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ink);
+    transition:
+      transform 0.25s var(--ease),
+      opacity 0.2s var(--ease);
+  }
+
+  /* Vira X quando aberto. */
+  header.aberto .traco:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  header.aberto .traco:nth-child(2) {
+    opacity: 0;
+  }
+
+  header.aberto .traco:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Drawer */
+  .drawer {
+    position: fixed;
+    top: calc(var(--altura-nav) + var(--faixa));
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 40px 24px calc(40px + env(safe-area-inset-bottom));
+    background: var(--white);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* visibility (e nao [hidden]) para o fade funcionar e os links sairem do foco. */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.25s var(--ease),
+      transform 0.25s var(--ease),
+      visibility 0.25s;
+  }
+
+  header.aberto .drawer {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .drawer nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drawer nav a {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--graphite);
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .drawer-base .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .drawer-contato {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    margin: 24px 0 0;
+    font-size: 15px;
+    color: var(--smoke);
+  }
+
+  /* Trava o scroll do body enquanto o menu esta aberto. */
+  :global(body.menu-aberto) {
+    overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    header {
+      --altura-nav: 68px;
+    }
+    .nav-desktop {
+      display: none;
+    }
+    .logo img {
+      width: 120px;
+    }
+    .hamburguer {
+      display: flex;
+    }
+    .drawer {
+      display: flex;
+    }
+    .cta {
+      padding: 0 18px;
+      font-size: 15px;
+    }
+    .cta-longo {
+      display: none;
+    }
+    .cta-curto {
+      display: inline;
+    }
+  }
+
+  /* Telas estreitas: o CTA mantem o rotulo curto, com menos respiro. */
+  @media (max-width: 420px) {
+    .bar {
+      gap: 12px;
+    }
+    .cta {
+      padding: 0 14px;
+    }
+    .drawer nav a {
+      font-size: 22px;
+      padding: 16px 0;
+    }
+  }
+</style>
+
+<script>
+  const header = document.getElementById('nav');
+  const botao = document.getElementById('menu-toggle');
+  const drawer = document.getElementById('menu-mobile');
+
+  const alternar = (abrir: boolean) => {
+    header?.classList.toggle('aberto', abrir);
+    document.body.classList.toggle('menu-aberto', abrir);
+    botao?.setAttribute('aria-expanded', String(abrir));
+    botao?.setAttribute('aria-label', abrir ? 'Fechar menu' : 'Abrir menu');
+  };
+
+  botao?.addEventListener('click', () =>
+    alternar(botao.getAttribute('aria-expanded') !== 'true')
+  );
+
+  // Fecha ao navegar para uma secao.
+  drawer?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => alternar(false)));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') alternar(false);
+  });
+
+  // Voltou para o desktop com o menu aberto: destrava o scroll.
+  window
+    .matchMedia('(min-width: 901px)')
+    .addEventListener('change', (e) => e.matches && alternar(false));
+
+  const onScroll = () => header?.classList.toggle('solid', window.scrollY > 80);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

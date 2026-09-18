@@ -1,0 +1,1718 @@
+---
+/* Orcamento guiado — proposta do projeto de UX/UI (AS2, PUCPR).
+   Pagina so da versao de teste: nada e' enviado. A tela final mostra a mensagem
+   que o WhatsApp da MEGA-WR receberia no site real.
+   ?v=1   versao apresentada nas conversas; sem parametro, versao revisada apos o feedback
+   ?p=    abre um estado pronto (usado para gerar as imagens do trabalho)
+   ?linha=saude|uniformes|fitness  comeca com a linha escolhida */
+import { getImage } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import { empresa, redes, whatsappLink, CTA_PADRAO } from '../config';
+import persBordado from '../assets/img/pers-bordado.jpg';
+import persSilk from '../assets/img/pers-silk.jpg';
+import persDtf from '../assets/img/pers-dtf.jpg';
+
+const miniaturas = await Promise.all(
+  [persBordado, persSilk, persDtf].map((src) => getImage({ src, width: 160, format: 'webp' })),
+);
+const IMG = { bordado: miniaturas[0].src, silk: miniaturas[1].src, dtf: miniaturas[2].src };
+const HORARIO = empresa.horario;
+const INSTA = redes[0]?.handle ?? '';
+const WA = whatsappLink(CTA_PADRAO);
+---
+
+<Layout
+  title="Montar orçamento — MEGA-WR Confecções (protótipo)"
+  description="Protótipo acadêmico do orçamento guiado da MEGA-WR: produto, quantidade, personalização e entrega em 4 passos."
+>
+  <div class="orc" data-manter>
+    <div class="wrap estreito">
+      <div id="orc-app"></div>
+      <noscript><p>Esta página precisa de JavaScript para montar o orçamento.</p></noscript>
+    </div>
+  </div>
+</Layout>
+
+<script is:inline define:vars={{ IMG, HORARIO, INSTA, WA }}>
+  /* ?v=1 = versão apresentada nas conversas com os participantes.
+     Sem parâmetro = versão revisada a partir do que eles disseram. */
+  const params = new URLSearchParams(location.search);
+  const V = params.get('v') === '1' ? 1 : 2;
+  const PRESET = params.get('p');
+  const CHAVE = 'orcamento-megawr';
+
+  const svg = (d) =>
+    `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const ic = {
+    voltar: svg('<path d="M15 18l-6-6 6-6"/>'),
+    seta: svg('<path d="M9 18l6-6-6-6"/>'),
+    check: svg('<path d="M20 6L9 17l-5-5"/>'),
+    salvar: svg('<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>'),
+    grupo: svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14.5c2.4 0 4 1.5 4.6 4"/>'),
+    mais: svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'),
+    info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+    alerta: svg('<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>'),
+    cadeado: svg('<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+    upload: svg('<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>'),
+    arquivo: svg('<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 15l2 2 4-4"/>'),
+    whats: svg('<path d="M3.5 20.5l1.3-4A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 1c-1.2-.5-2.4-1.7-2.9-2.9l1-1-1-2z"/>'),
+    baixar: svg('<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>'),
+    copiar: svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>'),
+    link: svg('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
+    mail: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),
+  };
+  const peca = {
+    camiseta: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M17 7l-9 4-5 9 7 3.5 2-3.5V42h24V20l2 3.5 7-3.5-5-9-9-4c-1 3-4 4.5-7 4.5S18 10 17 7z"/></svg>',
+    polo: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M17 7l-9 4-5 9 7 3.5 2-3.5V42h24V20l2 3.5 7-3.5-5-9-9-4-7 5z"/><path d="M17 7l3 6 4-1 4 1 3-6M24 12v8"/></svg>',
+    jaleco: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M17 5l-8 4-5 17 6 1.5 2-6V45h24V21.5l2 6 6-1.5-5-17-8-4-7 10z"/><path d="M24 15v30M29 31h5"/></svg>',
+    calca: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 5h20l3 38h-9.5L24 20l-3.5 23H11z"/><path d="M14 10h20"/></svg>',
+    bermuda: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 10h24l3 24h-11l-4-12-4 12H9z"/><path d="M12 15h24"/></svg>',
+    duvida: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="24" cy="24" r="17"/><path d="M19 19a5 5 0 1 1 7 4.6c-1.2.6-2 1.8-2 3.4M24 33h.01"/></svg>',
+  };
+
+  const TAMANHOS = {
+    padrao: ['PP', 'P', 'M', 'G', 'GG', 'G1', 'G2', 'G3', 'G4', 'G5'],
+    ate_g4: ['PP', 'P', 'M', 'G', 'GG', 'G1', 'G2', 'G3', 'G4'],
+    jaleco: ['PP', 'P', 'M', 'G', 'GG', 'EXG'],
+    social: ['1', '2', '3', '4', '5', '6'],
+  };
+  const LINHAS = {
+    saude: { nome: 'Saúde', produtos: [
+      { id: 'jaleco', nome: 'Jaleco', icone: 'jaleco', tam: 'jaleco', tecido: 'microfibra de gabardine' },
+      { id: 'scrub', nome: 'Scrub (pijama hospitalar)', icone: 'camiseta', tam: 'padrao', tecido: 'microfibra de gabardine' },
+    ]},
+    uniformes: { nome: 'Uniformes', produtos: [
+      { id: 'polo', nome: 'Camisa polo', icone: 'polo', tam: 'padrao', tecido: 'PV anti-pilling ou piquet' },
+      { id: 'camiseta', nome: 'Camiseta', icone: 'camiseta', tam: 'padrao', tecido: 'PV anti-pilling ou algodão' },
+      { id: 'social', nome: 'Camisa social', icone: 'polo', tam: 'social', tecido: 'tricoline ou algodão' },
+      { id: 'brim', nome: 'Calça de brim', icone: 'calca', tam: 'padrao', tecido: 'brim' },
+    ]},
+    fitness: { nome: 'Fitness', produtos: [
+      { id: 'legging', nome: 'Calça legging', icone: 'calca', tam: 'ate_g4', tecido: 'poliamida' },
+      { id: 'dryfit', nome: 'Camiseta dry-fit', icone: 'camiseta', tam: 'padrao', tecido: 'dry-fit' },
+      { id: 'bermuda', nome: 'Bermuda', icone: 'bermuda', tam: 'padrao', tecido: 'poliamida' },
+    ]},
+  };
+  const TECNICAS_BASE = [
+    { id: 'bordado', nome: 'Bordado', img: IMG.bordado, txt: 'Mais durável e com aspecto sério. Padrão em jaleco e camisa social.' },
+    { id: 'silk', nome: 'Silk', img: IMG.silk, txt: 'Melhor custo em volume, para artes com poucas cores.' },
+    { id: 'dtf', nome: 'DTF (estampa digital)', img: IMG.dtf, txt: 'Arte colorida, degradê ou detalhe fino, sem limite de cores.' },
+    { id: 'indicar', nome: 'Não sei, quero indicação', txt: 'A MEGA-WR indica a melhor opção para o uso da peça.' },
+  ];
+  // Versão revisada: a indicação vem primeiro, porque os dois participantes pediram por ela.
+  const tecnicas = () => (V === 2
+    ? [{ ...TECNICAS_BASE[3], selo: 'Recomendado se estiver em dúvida' }, ...TECNICAS_BASE.slice(0, 3)]
+    : TECNICAS_BASE);
+  const POSICOES_BASE = [
+    { id: 'peito-esq', nome: 'Peito esquerdo' },
+    { id: 'peito-dir', nome: 'Peito direito' },
+    { id: 'manga', nome: 'Manga' },
+    { id: 'costas', nome: 'Costas' },
+  ];
+  const posicoes = () => (V === 2 ? [...POSICOES_BASE, { id: 'depois', nome: 'Combinar depois' }] : POSICOES_BASE);
+  const ENTREGAS = { loja: 'Retirar na loja (Leme)', local: 'Entrega local', envio: 'Envio para outra cidade' };
+  const ENTREGAS_MSG = { loja: 'retirada na loja', local: 'entrega local', envio: 'envio para outra cidade' };
+  const PAGAMENTOS = { boleto: 'Boleto faturado', pix: 'Pix', cartao: 'Cartão', combinar: 'A combinar' };
+  const ETAPAS = ['Produto', 'Quantidade', 'Personalização', 'Entrega'];
+  const ORDEM = ['passo1', 'passo2', 'passo3', 'passo4', 'resumo', 'confirmacao'];
+
+  /* ---------------- Estado ---------------- */
+  const INICIAL = {
+    tela: 'passo1',
+    linha: 'uniformes', produto: null, cor: '',
+    qtd: {}, semTamanho: false, totalAprox: 10, planilha: null,
+    tecnica: null, posicoes: [], nomePeca: false, logo: null,
+    cidade: '', entrega: null, prazo: 'padrao', data: '', contato: '', empresa: '', whats: '', email: '',
+    pj: false, cnpj: '', nota: false, pagamento: null, verAntes: false,
+    canal: 'whatsapp', tentou: false, toast: null, retomado: false, codigo: 'MWR-4821',
+  };
+  const S = { ...INICIAL, qtd: {}, posicoes: [] };
+  const linhaParam = params.get('linha');
+  if (linhaParam && LINHAS[linhaParam]) S.linha = linhaParam;
+
+  // Versão revisada: o pedido fica salvo sozinho neste aparelho ("se salvasse onde eu parei, beleza").
+  if (V === 2 && !PRESET && !linhaParam) {
+    try {
+      const salvo = JSON.parse(localStorage.getItem(CHAVE) || 'null');
+      if (salvo && salvo.produto && salvo.tela !== 'confirmacao') Object.assign(S, salvo, { retomado: true, toast: null, tentou: false });
+    } catch (e) { /* sem armazenamento: segue do zero */ }
+  }
+  const salvarLocal = () => {
+    if (V !== 2 || PRESET) return;
+    try { localStorage.setItem(CHAVE, JSON.stringify({ ...S, toast: null, tentou: false, retomado: false })); } catch (e) { /* ignora */ }
+  };
+  const limparLocal = () => { try { localStorage.removeItem(CHAVE); } catch (e) { /* ignora */ } };
+
+  const BASE_POLO = { linha: 'uniformes', produto: 'polo', cor: 'Branca', qtd: { P: 2, M: 6, G: 5, GG: 2 } };
+  const BASE_PERS = { tecnica: 'bordado', posicoes: ['peito-esq'], logo: 'logo-empresa.png' };
+  const BASE_ENTREGA = {
+    cidade: 'Leme/SP', entrega: 'loja', prazo: 'data', data: '2026-10-19', contato: 'Juliana', empresa: 'Indústria exemplo',
+    whats: '(19) 9 0000-0000', email: 'rh@empresa-exemplo.com.br', pj: true, nota: true, pagamento: 'boleto', verAntes: true,
+  };
+  const BASE_ACADEMIA = { linha: 'fitness', produto: 'dryfit', cor: 'Preta', qtd: { M: 2, G: 2 } };
+  const PRESETS = {
+    p1: { tela: 'passo1', linha: 'uniformes', produto: 'polo', cor: 'Branca' },
+    'p2-ok': { tela: 'passo2', ...BASE_POLO },
+    'p2-baixo': { tela: 'passo2', ...BASE_ACADEMIA },
+    'p2-sem': { tela: 'passo2', linha: 'uniformes', produto: 'polo', cor: 'Branca', semTamanho: true, totalAprox: 15 },
+    p3: { tela: 'passo3', ...BASE_POLO, ...BASE_PERS },
+    p4: { tela: 'passo4', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+    'p4-erro': { tela: 'passo4', ...BASE_POLO, ...BASE_PERS, cidade: 'Leme/SP', entrega: 'loja', contato: 'Juliana', tentou: true },
+    resumo: { tela: 'resumo', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+    confirmacao: { tela: 'confirmacao', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+    'confirmacao-email': { tela: 'confirmacao', canal: 'email', ...BASE_POLO, ...BASE_PERS, ...BASE_ENTREGA },
+    grupo: { tela: 'grupo', ...BASE_ACADEMIA, tecnica: 'indicar', nomePeca: true, posicoes: ['peito-esq'] },
+  };
+  if (PRESET && PRESETS[PRESET]) Object.assign(S, PRESETS[PRESET]);
+  if (PRESET === 'p2-sem') {
+    if (V === 1) S.toast = 'Pedido salvo neste aparelho. Continue quando tiver os tamanhos.';
+    else S.planilha = 'tamanhos-equipe.xlsx';
+  }
+
+  /* ---------------- Utilidades ---------------- */
+  const produtoAtual = () => Object.values(LINHAS).flatMap((l) => l.produtos).find((p) => p.id === S.produto);
+  const somaTamanhos = () => Object.values(S.qtd).reduce((a, b) => a + b, 0);
+  const total = () => (S.semTamanho ? S.totalAprox : somaTamanhos());
+  const pecas = (n) => `${n} ${n === 1 ? 'peça' : 'peças'}`;
+  const grade = () => Object.entries(S.qtd).filter(([, n]) => n > 0).map(([t, n]) => `${t} ${n}`).join(' · ');
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fmtData = (iso) => (/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso.split('-').reverse().join('/') : iso);
+  const nomePos = (id) => posicoes().find((x) => x.id === id)?.nome || '';
+  const qtdTexto = () => {
+    if (!S.semTamanho) return ` — ${grade()}`;
+    return S.planilha ? ' (planilha de tamanhos anexada)' : ' (tamanhos a enviar)';
+  };
+
+  function valido(tela) {
+    if (tela === 'passo1') return !!S.produto;
+    if (tela === 'passo2') return total() >= 10;
+    if (tela === 'passo3') return !!S.tecnica;
+    if (tela === 'passo4') return !!(S.cidade.trim() && S.entrega && S.contato.trim() && S.whats.trim());
+    return true;
+  }
+
+  function mensagem() {
+    const p = produtoAtual();
+    const tec = TECNICAS_BASE.find((t) => t.id === S.tecnica);
+    const pos = S.posicoes.includes('depois') ? 'posição a combinar' : S.posicoes.map((id) => nomePos(id).toLowerCase()).join(' e ');
+    const linhas = [
+      'Olá! Vim pelo site e montei este pedido de orçamento:',
+      `• Produto: ${p ? p.nome : '—'} (${LINHAS[S.linha].nome})${S.cor ? ` — cor ${S.cor.toLowerCase()}` : ''}`,
+      `• Quantidade: ${pecas(total())}${qtdTexto()}`,
+      `• Personalização: ${tec ? (S.tecnica === 'indicar' ? 'quero indicação' : tec.nome.split(' (')[0].toLowerCase()) : '—'}${pos ? (S.posicoes.includes('depois') ? ` — ${pos}` : ` no ${pos}`) : ''}${S.logo ? ' (logo anexado)' : ''}${S.nomePeca ? ' + nome em cada peça' : ''}`,
+      `• Entrega: ${S.cidade || '—'} — ${S.entrega ? ENTREGAS_MSG[S.entrega] : '—'} — ${S.prazo === 'padrao' ? 'prazo padrão' : `preciso até ${fmtData(S.data) || '—'}`}`,
+    ];
+    if (V === 2 && S.pj) {
+      linhas.push(`• Empresa: ${S.empresa || '—'} — CNPJ ${S.cnpj || 'a informar'}${S.nota ? ' — preciso de nota fiscal' : ''}${S.pagamento ? ` — pagamento: ${PAGAMENTOS[S.pagamento].toLowerCase()}` : ''}`);
+    }
+    if (V === 2 && S.verAntes) linhas.push('• Quero ver tecido e modelo antes de fechar');
+    linhas.push(`• Contato: ${S.contato || '—'}${S.empresa && !(V === 2 && S.pj) ? ` — ${S.empresa}` : ''}${V === 2 && S.email ? ` — ${S.email}` : ''}`);
+    linhas.push(`Código do pedido: ${S.codigo}`);
+    return linhas.join('\n');
+  }
+
+  /* ---------------- Blocos comuns ---------------- */
+  function topo(n, voltarPara, rotulo) {
+    let direita = '';
+    if (n && V === 2) direita = `<span class="orc-salvo" title="Salvo neste aparelho">${ic.check} Salvo<span class="orc-salvo-extra"> neste aparelho</span></span>`;
+    else if (n) direita = `<button class="orc-salvar" data-acao="salvar">${ic.salvar} Salvar</button>`;
+    const voltar = voltarPara === 'site'
+      ? `<a class="orc-voltar" href="/">${ic.voltar} Voltar ao site</a>`
+      : `<button class="orc-voltar" data-acao="ir" data-tela="${voltarPara}">${ic.voltar} Voltar</button>`;
+    const etapas = n
+      ? `<ol class="orc-etapas" aria-label="Etapas do orçamento">${ETAPAS.map((e, i) => {
+          const cls = i + 1 < n ? 'feito' : i + 1 === n ? 'atual' : '';
+          return `<li class="${cls}" ${i + 1 === n ? 'aria-current="step"' : ''}><span class="n">${i + 1 < n ? '✓' : `0${i + 1}`}</span>${e}</li>`;
+        }).join('')}</ol>`
+      : '';
+    const retomado = S.retomado
+      ? `<div class="orc-retomado" role="status">${ic.info}<span>Continuamos de onde você parou.</span><button data-acao="recomecar">Começar de novo</button></div>`
+      : '';
+    return `<div class="orc-topo">${voltar}<span class="orc-rotulo">${rotulo || (n ? `Passo ${n} de 4` : '')}</span>${direita}</div>${etapas}${retomado}`;
+  }
+
+  function rodapeAcao(label, tela, dica) {
+    const ok = valido(tela);
+    return `<div class="orc-acao">${!ok && dica ? `<p class="orc-dica">${dica}</p>` : ''}
+      <button class="btn btn-primary" data-acao="avancar" ${ok ? '' : 'aria-disabled="true"'}>${label}</button></div>`;
+  }
+
+  const toast = () => (S.toast ? `<div class="orc-toast" role="status">${ic.check}<span>${S.toast}</span></div>` : '');
+  const toggle = (campo, titulo, texto) => `<label class="orc-toggle"><input type="checkbox" data-campo="${campo}" ${S[campo] ? 'checked' : ''}>
+      <span class="orc-tg"></span><span><b>${titulo}</b><small>${texto}</small></span></label>`;
+  const upload = (acao, arquivo, titulo, texto, trocar) => `<button class="orc-upload ${arquivo ? 'enviado' : ''}" data-acao="${acao}">${arquivo ? ic.arquivo : ic.upload}
+      <span>${arquivo ? `<b>${arquivo}</b><small>${trocar}</small>` : `<b>${titulo}</b><small>${texto}</small>`}</span></button>`;
+
+  /* ---------------- Telas ---------------- */
+  function passo1() {
+    const l = LINHAS[S.linha];
+    return `${topo(1, 'site')}
+    <h1>O que você <em>precisa</em>?</h1>
+    <p class="orc-lead">Escolha a linha e o modelo. O tecido a MEGA-WR indica no orçamento.</p>
+    <div class="orc-segmento" role="group" aria-label="Linha">
+      ${Object.entries(LINHAS).map(([id, x]) => `<button data-acao="linha" data-linha="${id}" aria-pressed="${S.linha === id}">${x.nome}</button>`).join('')}
+    </div>
+    <div class="orc-lista">
+      ${l.produtos.map((p) => `<button class="orc-opcao" data-acao="produto" data-produto="${p.id}" aria-pressed="${S.produto === p.id}">
+        <span class="orc-icone">${peca[p.icone]}</span>
+        <span class="orc-txt"><b>${p.nome}</b><small>Tamanhos ${TAMANHOS[p.tam][0]} a ${TAMANHOS[p.tam].at(-1)} · ${p.tecido}</small></span>
+        <span class="orc-marca">${S.produto === p.id ? ic.check : ''}</span>
+      </button>`).join('')}
+    </div>
+    ${S.produto ? `<div class="orc-campo"><label for="cor">Cor da peça <small>(opcional)</small></label>
+      <input id="cor" data-campo="cor" value="${esc(S.cor)}" placeholder="Ex.: azul marinho"></div>` : ''}
+    ${V === 2 ? `<p class="orc-direto">Com pressa? <a href="${WA}" target="_blank" rel="noopener">Fale direto no WhatsApp</a> e combine tudo por lá.</p>` : ''}
+    ${rodapeAcao('Continuar', 'passo1', 'Escolha um modelo para continuar')}`;
+  }
+
+  function passo2() {
+    const p = produtoAtual();
+    const t = total();
+    const falta = Math.max(0, 10 - t);
+    const medidor = `<div class="orc-medidor ${t >= 10 ? 'ok' : t > 0 ? 'baixo' : ''}">
+      <div class="orc-med-topo"><strong>${pecas(t)}</strong><span>${t >= 10 ? `${ic.check} Atende o pedido mínimo` : 'Mínimo: 10 peças por modelo'}</span></div>
+      <div class="orc-barra"><span style="width:${Math.min(100, t * 10)}%"></span></div></div>`;
+    const aviso = t > 0 && t < 10 ? `<div class="orc-aviso alerta" role="status">
+      <strong>Faltam ${pecas(falta)} para o mínimo de 10</strong>
+      <p>A MEGA-WR produz por lote, a partir de 10 peças do mesmo modelo. Para seguir, você pode:</p>
+      <button class="orc-saida" data-acao="ir" data-tela="grupo">${ic.grupo}<span><b>Montar pedido em grupo</b><small>${V === 2 ? 'Para equipes, alunos e turmas: cada pessoa escolhe tamanho e nome pelo mesmo link.' : 'Convide colegas por link. Cada um escolhe tamanho e nome.'}</small></span>${ic.seta}</button>
+      <button class="orc-saida" data-acao="focar">${ic.mais}<span><b>Aumentar a quantidade</b><small>Some peças em outros tamanhos até chegar a 10.</small></span>${ic.seta}</button>
+      <p class="orc-mini">Agora não? Siga <b>${INSTA}</b> e fale com a gente quando sua equipe precisar.</p>
+    </div>` : '';
+    const chave = toggle('semTamanho', 'Ainda não tenho os tamanhos',
+      V === 2 ? 'Informe o total agora e envie a planilha de tamanhos quando tiver.' : 'Informe só o total agora e envie a grade depois.');
+    const corpo = S.semTamanho
+      ? `<p class="orc-subtitulo">Quantas peças, aproximadamente?</p>
+         <div class="orc-tam orc-tam-total"><span>Total</span>
+           <div class="orc-stp grande"><button data-acao="aprox" data-d="-1" aria-label="Diminuir">−</button><output>${S.totalAprox}</output><button data-acao="aprox" data-d="1" aria-label="Aumentar">+</button></div></div>
+         ${V === 2 ? `<p class="orc-subtitulo">Planilha de tamanhos <span>(opcional)</span></p>
+           ${upload('planilha', S.planilha, 'Enviar planilha de tamanhos', 'Excel, PDF ou foto da lista. Pode enviar depois.', 'Planilha anexada · toque para trocar')}
+           <div class="orc-info">${ic.info}<span>Seu pedido fica salvo neste aparelho. Volte quando tiver os tamanhos da equipe.</span></div>`
+           : `<div class="orc-info">${ic.info}<span>Use <b>Salvar</b>, no topo, para voltar a este pedido quando tiver os tamanhos da equipe.</span></div>`}`
+      : `<p class="orc-subtitulo" id="grade">Quantidade por tamanho</p>
+         <div class="orc-grade">${TAMANHOS[p.tam].map((tz) => `<div class="orc-tam"><span>${tz}</span><div class="orc-stp">
+           <button data-acao="qtd" data-tam="${tz}" data-d="-1" aria-label="Diminuir ${tz}">−</button><output>${S.qtd[tz] || 0}</output>
+           <button data-acao="qtd" data-tam="${tz}" data-d="1" aria-label="Aumentar ${tz}">+</button></div></div>`).join('')}</div>`;
+    return `${topo(2, 'passo1')}${toast()}
+    <h1>Quantas peças e quais <em>tamanhos</em>?</h1>
+    <p class="orc-lead">${p.nome}${S.cor ? ` · ${esc(S.cor)}` : ''}</p>
+    ${medidor}${aviso}${chave}${corpo}
+    ${rodapeAcao('Continuar', 'passo2', '')}`;
+  }
+
+  function passo3() {
+    const marcador = (id, cx, cy, n) => {
+      const on = S.posicoes.includes(id);
+      return `<circle cx="${cx}" cy="${cy}" r="9" fill="${on ? '#1f3f9c' : '#fff'}" stroke="#1f3f9c" stroke-width="1.5"/>
+        <text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="11" font-weight="600" fill="${on ? '#fff' : '#1f3f9c'}">${n}</text>`;
+    };
+    const camisa = '<path d="M40 12l-22 9-14 24 17 8 6-9v68h66V44l6 9 17-8-14-24-22-9c-3 8-10 12-20 12s-17-4-20-12z" fill="#fff" stroke="#16181d" stroke-width="1.5" stroke-linejoin="round"/>';
+    return `${topo(3, 'passo2')}
+    <h1>Como <em>personalizar</em>?</h1>
+    <p class="orc-lead">Não precisa saber os termos técnicos: escolha pela descrição${V === 2 ? ' ou peça uma indicação' : ''}.</p>
+    <div class="orc-lista">
+      ${tecnicas().map((t) => `<button class="orc-opcao" data-acao="tecnica" data-id="${t.id}" aria-pressed="${S.tecnica === t.id}">
+        ${t.img ? `<img class="orc-foto" src="${t.img}" alt="">` : `<span class="orc-icone orc-icone-foto">${peca.duvida}</span>`}
+        <span class="orc-txt">${t.selo ? `<span class="orc-selo">${t.selo}</span>` : ''}<b>${t.nome}</b><small>${t.txt}</small></span>
+        <span class="orc-marca">${S.tecnica === t.id ? ic.check : ''}</span></button>`).join('')}
+    </div>
+    ${S.tecnica ? `
+      <p class="orc-subtitulo">Onde aplicar? <span>(${V === 2 ? 'opcional' : 'pode marcar mais de um'})</span></p>
+      <div class="orc-diagrama" aria-hidden="true">
+        <figure><svg viewBox="0 0 150 130">${camisa}${marcador('peito-dir', 57, 48, 2)}${marcador('peito-esq', 93, 48, 1)}${marcador('manga', 20, 38, 3)}</svg><figcaption>Frente</figcaption></figure>
+        <figure><svg viewBox="0 0 150 130">${camisa}${marcador('costas', 75, 70, 4)}</svg><figcaption>Costas</figcaption></figure>
+      </div>
+      <div class="orc-chips" role="group" aria-label="Posição da personalização">
+        ${posicoes().map((x, i) => `<button class="orc-chip" data-acao="posicao" data-id="${x.id}" aria-pressed="${S.posicoes.includes(x.id)}">${S.posicoes.includes(x.id) ? ic.check : x.id === 'depois' ? '' : `${i + 1}.`} ${x.nome}</button>`).join('')}
+      </div>
+      <p class="orc-subtitulo">Logo ou arte</p>
+      ${upload('logo', S.logo, 'Enviar logo', 'PNG, JPG ou PDF. Não tem agora? Envie depois.', 'Enviado · toque para trocar')}
+      ${toggle('nomePeca', 'Nome em cada peça', 'Ex.: nome e registro profissional bordados.')}` : ''}
+    ${rodapeAcao('Continuar', 'passo3', 'Escolha uma opção de personalização')}`;
+  }
+
+  function passo4() {
+    const vazio = (campo) => S.tentou && !String(S[campo] || '').trim();
+    const erro = (campo, msg) => (vazio(campo) ? `<span class="orc-erro">${ic.alerta}${msg}</span>` : '');
+    const cls = (campo) => (vazio(campo) ? 'orc-campo com-erro' : 'orc-campo');
+    const blocoEmpresa = V === 2 ? `${toggle('pj', 'Compra pela empresa', 'Para informar CNPJ, nota fiscal e forma de pagamento.')}
+      ${S.pj ? `<div class="orc-bloco">
+        <div class="orc-campo"><label for="cnpj">CNPJ <small>(opcional, para a nota fiscal)</small></label>
+          <input id="cnpj" data-campo="cnpj" inputmode="numeric" value="${esc(S.cnpj)}" placeholder="00.000.000/0000-00"></div>
+        <div class="orc-chips orc-chips-topo"><button class="orc-chip" data-acao="nota" aria-pressed="${S.nota}">${S.nota ? ic.check : ''} Preciso de nota fiscal</button></div>
+        <p class="orc-subtitulo">Forma de pagamento preferida</p>
+        <div class="orc-chips" role="group" aria-label="Forma de pagamento">
+          ${Object.entries(PAGAMENTOS).map(([id, n]) => `<button class="orc-chip" data-acao="pagamento" data-id="${id}" aria-pressed="${S.pagamento === id}">${n}</button>`).join('')}
+        </div></div>` : ''}` : '';
+    return `${topo(4, 'passo3')}
+    <h1>Entrega e <em>contato</em></h1>
+    <p class="orc-lead">Última etapa. Depois você revisa tudo antes de enviar.</p>
+    <div class="${cls('cidade')}"><label for="cidade">Cidade de entrega</label>
+      <input id="cidade" data-campo="cidade" value="${esc(S.cidade)}" placeholder="Ex.: Leme/SP" autocomplete="address-level2">${erro('cidade', 'Informe a cidade para calcularmos a entrega')}</div>
+    <p class="orc-subtitulo">Como prefere receber?</p>
+    <div class="orc-chips" role="group" aria-label="Forma de entrega">
+      ${Object.entries(ENTREGAS).map(([id, n]) => `<button class="orc-chip" data-acao="entrega" data-id="${id}" aria-pressed="${S.entrega === id}">${n}</button>`).join('')}
+    </div>
+    <p class="orc-subtitulo">Prazo</p>
+    <div class="orc-chips" role="group" aria-label="Prazo">
+      <button class="orc-chip" data-acao="prazo" data-id="padrao" aria-pressed="${S.prazo === 'padrao'}">Padrão: 20 a 30 dias</button>
+      <button class="orc-chip" data-acao="prazo" data-id="data" aria-pressed="${S.prazo === 'data'}">Preciso até uma data</button>
+    </div>
+    ${S.prazo === 'data' ? `<div class="orc-campo"><label for="data">Data limite</label><input id="data" type="date" data-campo="data" value="${esc(S.data)}"></div>` : ''}
+    <div class="${cls('contato')}"><label for="contato">Seu nome</label>
+      <input id="contato" data-campo="contato" value="${esc(S.contato)}" autocomplete="name">${erro('contato', 'Informe seu nome')}</div>
+    <div class="orc-campo"><label for="empresa">Empresa ou instituição <small>(opcional)</small></label>
+      <input id="empresa" data-campo="empresa" value="${esc(S.empresa)}" autocomplete="organization"></div>
+    ${blocoEmpresa}
+    <div class="${cls('whats')}"><label for="whats">WhatsApp</label>
+      <input id="whats" type="tel" data-campo="whats" value="${esc(S.whats)}" placeholder="(DDD) 9 0000-0000" autocomplete="tel">${erro('whats', 'Informe seu WhatsApp: é por ele que o orçamento chega')}</div>
+    ${V === 2 ? `<div class="orc-campo"><label for="email">E-mail <small>(opcional, para receber o resumo)</small></label>
+      <input id="email" type="email" data-campo="email" value="${esc(S.email)}" autocomplete="email"></div>
+      ${toggle('verAntes', 'Quero ver tecido e modelo antes de fechar', 'Na loja em Leme ou por amostra, conforme o pedido.')}` : ''}
+    <div class="orc-info">${ic.cadeado}<span>${V === 2
+      ? 'Sem cadastro. CNPJ só se a compra for da empresa, para a nota fiscal. Seus dados servem só para responder este orçamento.'
+      : 'Não pedimos CNPJ nem cadastro. Seus dados servem só para responder este orçamento.'}</span></div>
+    <div class="orc-acao"><button class="btn btn-primary" data-acao="avancar">Revisar pedido</button></div>`;
+  }
+
+  function resumo() {
+    const p = produtoAtual();
+    const tec = TECNICAS_BASE.find((t) => t.id === S.tecnica);
+    const linha = (rot, val, tela) => `<div class="orc-linha"><div><p class="orc-rot">${rot}</p><p class="orc-val">${val}</p></div>
+      ${tela ? `<button class="orc-editar" data-acao="ir" data-tela="${tela}">Editar</button>` : ''}</div>`;
+    const pos = S.posicoes.includes('depois') ? ' · posição a combinar' : S.posicoes.length ? ` · ${S.posicoes.map(nomePos).join(', ')}` : '';
+    const qtd = S.semTamanho ? (S.planilha ? ' · planilha anexada' : ' · tamanhos a enviar') : ` · ${grade()}`;
+    const acoes = V === 2
+      ? `<p class="orc-nota">${ic.info}<span>O WhatsApp abre com esta mensagem pronta (no computador, pelo WhatsApp Web). Prefere e-mail? O mesmo resumo vai para a MEGA-WR${S.email ? ', com cópia para você' : ''}.</span></p>
+         <div class="orc-duas">
+           <button class="btn btn-ghost" data-acao="baixar">${ic.baixar} Baixar PDF</button>
+           <button class="btn btn-ghost" data-acao="copiar">${ic.copiar} Copiar texto</button></div>
+         <button class="btn btn-primary" data-acao="avancar">${ic.whats} Enviar pelo WhatsApp</button>
+         <button class="btn btn-ghost orc-largo" data-acao="email">${ic.mail} Enviar por e-mail</button>`
+      : `<p class="orc-nota">${ic.info}<span>Ao tocar em enviar, o WhatsApp da MEGA-WR abre com esta mensagem pronta. Você ainda pode editar antes de mandar.</span></p>
+         <div class="orc-duas">
+           <button class="btn btn-ghost" data-acao="baixar">${ic.baixar} Baixar resumo</button>
+           <button class="btn btn-ghost" data-acao="copiar">${ic.copiar} Copiar texto</button></div>
+         <button class="btn btn-primary" data-acao="avancar">${ic.whats} Enviar pelo WhatsApp</button>`;
+    return `${topo(0, 'passo4', 'Revisão')}${toast()}
+    <h1>Revise antes de <em>enviar</em></h1>
+    <div class="orc-resumo">
+      ${linha('Produto', `${p.nome} · ${LINHAS[S.linha].nome}${S.cor ? ` · ${esc(S.cor)}` : ''}`, 'passo1')}
+      ${linha('Quantidade', `${pecas(total())}${qtd}`, 'passo2')}
+      ${linha('Personalização', `${tec.nome}${pos}${S.logo ? ' · logo enviado' : ''}`, 'passo3')}
+      ${linha('Entrega', `${esc(S.cidade)} · ${ENTREGAS[S.entrega]} · ${S.prazo === 'padrao' ? '20 a 30 dias' : `até ${esc(fmtData(S.data))}`}`, 'passo4')}
+      ${V === 2 && S.pj ? linha('Empresa', `${esc(S.empresa || '—')} · CNPJ ${esc(S.cnpj || 'a informar')}${S.nota ? ' · nota fiscal' : ''}${S.pagamento ? ` · ${PAGAMENTOS[S.pagamento]}` : ''}`, 'passo4') : ''}
+      ${V === 2 && S.verAntes ? linha('Antes de fechar', 'Ver tecido e modelo (loja ou amostra)', 'passo4') : ''}
+      ${linha('Contato', `${esc(S.contato)}${S.empresa && !(V === 2 && S.pj) ? ` · ${esc(S.empresa)}` : ''} · ${esc(S.whats)}${V === 2 && S.email ? ` · ${esc(S.email)}` : ''}`, 'passo4')}
+      <div class="orc-linha orc-preco"><div><p class="orc-rot">Preço</p><p class="orc-val">Calculado pela MEGA-WR conforme modelo, tecido, quantidade e personalização.</p></div></div>
+    </div>
+    <p class="orc-subtitulo">Mensagem que será enviada</p>
+    <div class="orc-bolha-wrap"><div class="orc-bolha">${esc(mensagem())}<span class="orc-hora">agora</span></div></div>
+    <div class="orc-acao">${acoes}</div>`;
+  }
+
+  function confirmacao() {
+    const email = S.canal === 'email';
+    const destino = email
+      ? `<div class="orc-email-topo">${ic.mail}<span>Para: MEGA-WR Confecções${S.email ? ` · cópia: ${esc(S.email)}` : ''}<small>Assunto: Pedido de orçamento ${S.codigo} · resumo em PDF anexado</small></span></div>
+         <div class="orc-email-corpo">${esc(mensagem())}</div>`
+      : `<div class="orc-wa-topo"><img src="/img/logo.png" alt=""><span>MEGA-WR Confecções<small>${HORARIO}</small></span></div>
+         <div class="orc-bolha-wrap orc-wa-corpo"><div class="orc-bolha">${esc(mensagem())}<span class="orc-hora">agora ✓✓</span></div></div>`;
+    return `${topo(0, 'resumo', 'Pedido pronto')}
+    <div class="orc-sucesso"><span class="orc-circ">${ic.check}</span>
+      <h1>Seu pedido foi para o <em>${email ? 'e-mail' : 'WhatsApp'}</em></h1>
+      <p class="orc-lead">Versão de teste: no site real, ${email ? 'o resumo seria enviado agora para o e-mail da MEGA-WR' : 'a conversa com a MEGA-WR abriria agora com a mensagem abaixo'}. Nada foi enviado.</p></div>
+    ${destino}
+    <div class="orc-codigo"><span>Código do pedido<small>Use para retomar a conversa</small></span><b>${S.codigo}</b></div>
+    <p class="orc-subtitulo">O que acontece agora</p>
+    <ol class="orc-proximos">
+      <li><span class="n">01</span><span>A MEGA-WR responde com o orçamento${email ? ' por e-mail ou WhatsApp' : ' pelo WhatsApp'}.</span></li>
+      <li><span class="n">02</span><span>Vocês definem modelo e tecido${V === 2 ? ', com visita à loja ou amostra se você pediu' : ''}.</span></li>
+      <li><span class="n">03</span><span>Você aprova a personalização antes da produção.</span></li>
+      <li><span class="n">04</span><span>Produção e entrega em 20 a 30 dias.</span></li>
+    </ol>
+    <div class="orc-acao"><a class="btn btn-ghost" href="/">Voltar ao site</a></div>`;
+  }
+
+  function grupo() {
+    const p = produtoAtual();
+    const t = somaTamanhos();
+    const tec = TECNICAS_BASE.find((x) => x.id === S.tecnica);
+    const tecTxt = tec ? (S.tecnica === 'indicar' ? 'personalização a indicar' : tec.nome.split(' (')[0].toLowerCase()) : '';
+    return `${topo(0, 'passo2', 'Pedido em grupo')}${toast()}
+    <h1>${V === 2 ? 'Junte a equipe ou os alunos e chegue a' : 'Junte colegas e chegue a'} <em>10 peças</em></h1>
+    <p class="orc-lead">${p.nome}${S.cor ? ` · ${esc(S.cor)}` : ''}${tecTxt ? ` · ${tecTxt}` : ''}${S.nomePeca ? ' · nome em cada peça' : ''}</p>
+    <div class="orc-medidor baixo">
+      <div class="orc-med-topo"><strong>${t} de 10 peças</strong><span>faltam ${10 - t}</span></div>
+      <div class="orc-barra"><span style="width:${Math.min(100, t * 10)}%"></span></div></div>
+    <p class="orc-subtitulo">Link do grupo</p>
+    <div class="orc-link">${ic.link}<span>megawr.com.br/g/${S.produto === 'dryfit' ? 'ACADEMIA' : 'GRUPO'}-7K2P</span></div>
+    <div class="orc-duas">
+      <button class="btn btn-ghost" data-acao="copiar">${ic.copiar} Copiar link</button>
+      <button class="btn btn-ghost" data-acao="copiar">${ic.whats} Enviar no grupo</button></div>
+    <p class="orc-subtitulo">Participantes</p>
+    <ul class="orc-participantes">
+      <li><b>Você</b><span>${grade()} · ${pecas(t)}</span></li>
+      <li class="vazio"><span>Aguardando ${V === 2 ? 'equipe ou alunos' : 'colegas'}…</span></li>
+    </ul>
+    <div class="orc-info">${ic.info}<span>${V === 2
+      ? 'Cada pessoa abre o link e escolhe tamanho e nome. O pedido só segue para orçamento quando o grupo somar 10 peças, já separado por pessoa. Como cada participante paga é combinado com a MEGA-WR.'
+      : 'Cada colega abre o link e informa tamanho e nome. Quando o grupo somar 10 peças, você recebe um aviso e envia o orçamento com todas as peças juntas, já separadas por pessoa.'}</span></div>
+    <div class="orc-acao"><button class="btn btn-primary" aria-disabled="true">Enviar orçamento do grupo</button>
+      <p class="orc-dica">Disponível quando o grupo chegar a 10 peças</p></div>`;
+  }
+
+  const TELAS = { passo1, passo2, passo3, passo4, resumo, confirmacao, grupo };
+  const app = document.getElementById('orc-app');
+
+  function render(rolar) {
+    app.innerHTML = TELAS[S.tela]();
+    if (S.tela === 'confirmacao') limparLocal(); else salvarLocal();
+    if (rolar) window.scrollTo(0, 0);
+  }
+
+  function ir(tela, empilhar = true) {
+    S.tela = tela; S.tentou = false; S.toast = null; S.retomado = false;
+    if (empilhar && !PRESET) history.pushState({ tela }, '', `#${tela}`);
+    render(true);
+  }
+
+  window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.tela) ir(e.state.tela, false);
+    else ir('passo1', false);
+  });
+
+  function avisar(texto) {
+    S.toast = texto; render();
+    setTimeout(() => { S.toast = null; render(); }, 3000);
+  }
+
+  /* ---------------- Interação ---------------- */
+  app.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-acao]');
+    if (!el) return;
+    const d = el.dataset;
+    switch (d.acao) {
+      case 'ir': ir(d.tela); break;
+      case 'linha': S.linha = d.linha; S.produto = null; render(); break;
+      case 'produto': S.produto = d.produto; S.qtd = {}; render(); break;
+      case 'qtd': S.qtd[d.tam] = Math.max(0, (S.qtd[d.tam] || 0) + Number(d.d)); render(); break;
+      case 'aprox': S.totalAprox = Math.max(1, S.totalAprox + Number(d.d)); render(); break;
+      case 'focar': document.getElementById('grade')?.scrollIntoView({ behavior: 'smooth' }); break;
+      case 'tecnica': S.tecnica = d.id; render(); break;
+      case 'posicao':
+        if (d.id === 'depois') S.posicoes = S.posicoes.includes('depois') ? [] : ['depois'];
+        else S.posicoes = S.posicoes.includes(d.id) ? S.posicoes.filter((x) => x !== d.id) : [...S.posicoes.filter((x) => x !== 'depois'), d.id];
+        render(); break;
+      case 'logo': S.logo = S.logo ? null : 'logo-empresa.png'; render(); break;
+      case 'planilha': S.planilha = S.planilha ? null : 'tamanhos-equipe.xlsx'; render(); break;
+      case 'entrega': S.entrega = d.id; render(); break;
+      case 'prazo': S.prazo = d.id; render(); break;
+      case 'nota': S.nota = !S.nota; render(); break;
+      case 'pagamento': S.pagamento = S.pagamento === d.id ? null : d.id; render(); break;
+      case 'salvar': avisar('Pedido salvo neste aparelho. Continue quando tiver os tamanhos.'); break;
+      case 'baixar': avisar('Resumo baixado (simulação da versão de teste).'); break;
+      case 'copiar': avisar('Copiado (simulação da versão de teste).'); break;
+      case 'recomecar': limparLocal(); location.href = location.pathname; break;
+      case 'email': S.canal = 'email'; ir('confirmacao'); break;
+      case 'avancar': {
+        if (el.getAttribute('aria-disabled') === 'true') return;
+        if (!valido(S.tela)) { S.tentou = true; render(); return; }
+        if (S.tela === 'resumo') S.canal = 'whatsapp';
+        ir(ORDEM[ORDEM.indexOf(S.tela) + 1]);
+        break;
+      }
+    }
+  });
+
+  app.addEventListener('input', (e) => {
+    const c = e.target.dataset.campo;
+    if (!c) return;
+    if (e.target.type === 'checkbox') { S[c] = e.target.checked; render(); return; }
+    S[c] = e.target.value;
+    salvarLocal();
+    // Atualiza só o botão, sem redesenhar a tela: o campo não perde o foco.
+    const btn = app.querySelector('.orc-acao [data-acao="avancar"]');
+    if (btn && S.tela !== 'passo4') {
+      if (valido(S.tela)) btn.removeAttribute('aria-disabled');
+      else btn.setAttribute('aria-disabled', 'true');
+    }
+  });
+
+  if (!PRESET) history.replaceState({ tela: S.tela }, '', location.pathname + location.search);
+  render();
+</script>
+
+<style is:global>
+  .orc {
+    padding: calc(80px + var(--faixa) + 40px) 0 0;
+    min-height: 100svh;
+  }
+
+  .orc .estreito {
+    max-width: 720px;
+  }
+
+  .orc .ic {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .orc h1 {
+    font-size: clamp(32px, 6vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .orc-lead {
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  /* Topo do fluxo */
+  .orc-topo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .orc-voltar,
+  .orc-salvar,
+  .orc-editar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .orc-voltar {
+    color: var(--smoke);
+  }
+
+  .orc-voltar:hover {
+    color: var(--ink);
+  }
+
+  .orc-rotulo {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--smoke);
+  }
+
+  .orc-salvar {
+    color: var(--azul);
+    font-weight: 500;
+  }
+
+  .orc-salvar .ic {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Etapas: hairlines — azul concluida, vermelho atual, cinza pendente */
+  .orc-etapas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 0 0 40px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .orc-etapas li {
+    padding-top: 10px;
+    border-top: 2px solid var(--graphite);
+    font-size: 13px;
+    color: var(--smoke);
+  }
+
+  .orc-etapas .n {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  .orc-etapas li.feito {
+    border-color: var(--azul);
+  }
+
+  .orc-etapas li.feito .n {
+    color: var(--azul);
+  }
+
+  .orc-etapas li.atual {
+    border-color: var(--vermelho);
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .orc-subtitulo {
+    margin: 32px 0 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .orc-subtitulo span {
+    font-weight: 400;
+    color: var(--smoke);
+  }
+
+  /* Seleção */
+  .orc-segmento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-top: 32px;
+    padding: 4px;
+    border: 1px solid var(--graphite);
+    border-radius: 9999px;
+  }
+
+  .orc-segmento button {
+    height: 40px;
+    border: 0;
+    border-radius: 9999px;
+    background: none;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--smoke);
+    cursor: pointer;
+  }
+
+  .orc-segmento button[aria-pressed='true'] {
+    background: var(--azul);
+    color: var(--white);
+  }
+
+  .orc-lista {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .orc-opcao {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 72px;
+    padding: 14px 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    background: var(--white);
+    font: inherit;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s var(--ease);
+  }
+
+  .orc-opcao:hover {
+    border-color: var(--ink);
+  }
+
+  .orc-opcao[aria-pressed='true'] {
+    border-color: var(--azul);
+    box-shadow: inset 0 0 0 1px var(--azul);
+    background: #f6f8fd;
+  }
+
+  .orc-icone {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--charcoal);
+  }
+
+  .orc-icone svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .orc-icone-foto,
+  .orc-foto {
+    width: 60px;
+    height: 60px;
+  }
+
+  .orc-foto {
+    flex-shrink: 0;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .orc-txt {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.3;
+  }
+
+  .orc-txt b {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .orc-txt small {
+    font-size: 13px;
+    color: var(--smoke);
+  }
+
+  .orc-marca {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    border: 1.5px solid var(--graphite);
+    border-radius: 50%;
+  }
+
+  .orc-opcao[aria-pressed='true'] .orc-marca {
+    border-color: var(--azul);
+    background: var(--azul);
+    color: var(--white);
+  }
+
+  .orc-opcao[aria-pressed='true'] .orc-marca .ic {
+    width: 14px;
+    height: 14px;
+  }
+
+  .orc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .orc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--graphite);
+    border-radius: 9999px;
+    background: var(--white);
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .orc-chip .ic {
+    width: 16px;
+    height: 16px;
+  }
+
+  .orc-chip[aria-pressed='true'] {
+    border-color: var(--azul);
+    box-shadow: inset 0 0 0 1px var(--azul);
+    background: #f6f8fd;
+    color: var(--azul);
+    font-weight: 500;
+  }
+
+  /* Campos */
+  .orc-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .orc-campo label {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .orc-campo label small {
+    font-weight: 400;
+    color: var(--smoke);
+  }
+
+  .orc-campo input {
+    height: 52px;
+    padding: 0 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    background: var(--white);
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .orc-campo input:focus {
+    outline: none;
+    border-color: var(--azul);
+    box-shadow: 0 0 0 3px rgba(31, 63, 156, 0.15);
+  }
+
+  .orc-campo.com-erro input {
+    border-color: var(--vermelho);
+  }
+
+  .orc-erro {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #b0191e;
+  }
+
+  .orc-erro .ic {
+    width: 16px;
+    height: 16px;
+  }
+
+  .orc-info,
+  .orc-nota {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--charcoal);
+    font-size: 14px;
+    color: var(--smoke);
+  }
+
+  .orc-info .ic,
+  .orc-nota .ic {
+    width: 18px;
+    height: 18px;
+    color: var(--azul);
+  }
+
+  .orc-nota {
+    margin: 0 0 12px;
+    padding: 0;
+    background: none;
+    font-size: 13px;
+  }
+
+  /* Quantidade */
+  .orc-medidor {
+    margin-top: 32px;
+    padding: 16px 20px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+  }
+
+  .orc-med-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .orc-med-topo strong {
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  .orc-med-topo span {
+    display: inline-flex;
+    text-align: right;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--smoke);
+  }
+
+  .orc-med-topo .ic {
+    width: 16px;
+    height: 16px;
+  }
+
+  .orc-medidor.ok {
+    border-color: var(--azul);
+    background: #f6f8fd;
+  }
+
+  .orc-medidor.ok .orc-med-topo span {
+    color: var(--azul);
+    font-weight: 500;
+  }
+
+  .orc-medidor.baixo {
+    border-color: #f2c38a;
+    background: #fffaf2;
+  }
+
+  .orc-barra {
+    position: relative;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--graphite);
+  }
+
+  .orc-barra span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 99px;
+    background: #e8a24a;
+  }
+
+  .orc-medidor.ok .orc-barra span {
+    background: var(--azul);
+  }
+
+  .orc-total {
+    margin-top: 24px;
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  .orc-grade {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .orc-tam {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 4px 4px 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+  }
+
+  .orc-tam > span {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .orc-tam-total {
+    padding: 8px 8px 8px 16px;
+  }
+
+  .orc-stp {
+    display: flex;
+    align-items: center;
+  }
+
+  .orc-stp button {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    font: inherit;
+    font-size: 20px;
+    color: var(--azul);
+    cursor: pointer;
+  }
+
+  .orc-stp button:hover {
+    background: #eef2fb;
+  }
+
+  .orc-stp output {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .orc-stp.grande output {
+    min-width: 56px;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+  }
+
+  .orc-toggle {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .orc-toggle input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .orc-tg {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 99px;
+    background: #cbd0d8;
+    transition: background 0.2s var(--ease);
+  }
+
+  .orc-tg::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--white);
+    transition: left 0.2s var(--ease);
+  }
+
+  .orc-toggle input:checked + .orc-tg {
+    background: var(--azul);
+  }
+
+  .orc-toggle input:checked + .orc-tg::after {
+    left: 21px;
+  }
+
+  .orc-toggle input:focus-visible + .orc-tg {
+    outline: 3px solid var(--azul);
+    outline-offset: 2px;
+  }
+
+  .orc-toggle b {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .orc-toggle small {
+    display: block;
+    font-size: 14px;
+    color: var(--smoke);
+  }
+
+  .orc-aviso {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-left: 3px solid;
+    border-radius: 0 10px 10px 0;
+    font-size: 15px;
+  }
+
+  .orc-aviso strong {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .orc-aviso p {
+    margin-bottom: 12px;
+  }
+
+  .orc-aviso.erro {
+    border-color: var(--vermelho);
+    background: #fdf2f2;
+  }
+
+  .orc-aviso.erro p {
+    margin: 0;
+  }
+
+  .orc-aviso.alerta {
+    border-color: #e8a24a;
+    background: #fffaf2;
+  }
+
+  .orc-saida {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 60px;
+    margin-bottom: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    background: var(--white);
+    font: inherit;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .orc-saida:hover {
+    border-color: var(--azul);
+  }
+
+  .orc-saida > .ic {
+    color: var(--azul);
+  }
+
+  .orc-saida span {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+
+  .orc-saida b {
+    font-weight: 500;
+  }
+
+  .orc-saida small {
+    font-size: 13px;
+    color: var(--smoke);
+  }
+
+  .orc-mini {
+    margin: 8px 0 0 !important;
+    font-size: 13px;
+  }
+
+  /* Personalização */
+  .orc-diagrama {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--charcoal);
+  }
+
+  .orc-diagrama figure {
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--smoke);
+  }
+
+  .orc-diagrama svg {
+    display: block;
+    width: 140px;
+    height: 122px;
+  }
+
+  .orc-upload {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 16px;
+    border: 1px dashed #aeb4be;
+    border-radius: 10px;
+    background: var(--white);
+    font: inherit;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .orc-upload .ic {
+    width: 24px;
+    height: 24px;
+    color: var(--azul);
+  }
+
+  .orc-upload span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+  }
+
+  .orc-upload b {
+    font-weight: 500;
+  }
+
+  .orc-upload small {
+    font-size: 13px;
+    color: var(--smoke);
+  }
+
+  .orc-upload.enviado {
+    border-style: solid;
+    border-color: var(--azul);
+    background: #f6f8fd;
+  }
+
+  /* Resumo */
+  .orc-resumo {
+    margin-top: 32px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .orc-linha {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--graphite);
+  }
+
+  .orc-linha:last-child {
+    border-bottom: 0;
+  }
+
+  .orc-linha > div {
+    flex: 1;
+  }
+
+  .orc-rot {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .orc-val {
+    margin-top: 2px;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .orc-editar {
+    height: 32px;
+    color: var(--azul);
+    font-weight: 500;
+  }
+
+  .orc-preco {
+    background: #f6f8fd;
+  }
+
+  .orc-bolha-wrap {
+    padding: 16px;
+    border-radius: 10px;
+    background: #efe7de;
+  }
+
+  .orc-bolha {
+    margin-left: 24px;
+    padding: 10px 12px;
+    border-radius: 10px 2px 10px 10px;
+    background: #d9fdd3;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+    font-size: 14px;
+    line-height: 1.45;
+    color: #111b21;
+    white-space: pre-line;
+  }
+
+  .orc-hora {
+    display: block;
+    margin-top: 4px;
+    text-align: right;
+    font-size: 11px;
+    color: #667781;
+  }
+
+  .orc-duas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .orc-duas .btn {
+    justify-content: center;
+    padding: 0 12px;
+    font-size: 15px;
+  }
+
+  .orc-duas .ic {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Confirmação e grupo */
+  .orc-sucesso {
+    padding: 8px 0 24px;
+    text-align: center;
+  }
+
+  .orc-circ {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: #f6f8fd;
+    color: var(--azul);
+  }
+
+  .orc-circ .ic {
+    width: 32px;
+    height: 32px;
+  }
+
+  .orc-wa-topo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px 10px 0 0;
+    background: #075e54;
+    color: var(--white);
+  }
+
+  .orc-wa-topo img {
+    width: 34px;
+    height: 34px;
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--white);
+    object-fit: contain;
+  }
+
+  .orc-wa-topo span {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .orc-wa-topo small {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.85;
+  }
+
+  .orc-wa-corpo {
+    border-radius: 0 0 10px 10px;
+  }
+
+  .orc-codigo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .orc-codigo small {
+    display: block;
+    font-size: 12px;
+    color: var(--smoke);
+  }
+
+  .orc-codigo b {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .orc-proximos {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .orc-proximos li {
+    display: flex;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--graphite);
+    font-size: 15px;
+  }
+
+  .orc-proximos .n {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--azul);
+    padding-top: 3px;
+  }
+
+  .orc-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+    font-weight: 500;
+    color: var(--azul);
+  }
+
+  .orc-participantes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--graphite);
+    border-radius: 10px;
+  }
+
+  .orc-participantes li {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--graphite);
+    font-size: 15px;
+  }
+
+  .orc-participantes li:last-child {
+    border-bottom: 0;
+  }
+
+  .orc-participantes b {
+    font-weight: 500;
+  }
+
+  .orc-participantes .vazio {
+    color: #8a909a;
+  }
+
+  /* Barra de ação */
+  .orc-acao {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin-top: 40px;
+    padding: 16px 0 24px;
+    border-top: 1px solid var(--graphite);
+    background: var(--white);
+  }
+
+  .orc-acao > .btn {
+    width: 100%;
+    justify-content: center;
+    height: 52px;
+  }
+
+  .orc-acao .btn[aria-disabled='true'] {
+    background: #b7c1e0;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .orc-dica {
+    margin-bottom: 8px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .orc-acao .orc-dica:last-child {
+    margin: 8px 0 0;
+  }
+
+  .orc-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 110px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: min(460px, calc(100vw - 48px));
+    padding: 14px 18px;
+    border-radius: 9999px;
+    background: var(--ink);
+    color: var(--white);
+    font-size: 14px;
+    transform: translateX(-50%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .orc-toast .ic {
+    width: 18px;
+    height: 18px;
+    color: #9fb4ec;
+  }
+
+  /* Versão revisada (feedback das conversas) */
+  .orc-salvo {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--azul);
+    white-space: nowrap;
+  }
+
+  .orc-salvo .ic {
+    width: 16px;
+    height: 16px;
+  }
+
+  .orc-retomado {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: -16px 0 32px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: #f6f8fd;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .orc-retomado .ic {
+    color: var(--azul);
+  }
+
+  .orc-retomado span {
+    flex: 1;
+  }
+
+  .orc-retomado button {
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--azul);
+    cursor: pointer;
+  }
+
+  .orc-direto {
+    margin-top: 24px;
+    font-size: 14px;
+  }
+
+  .orc-direto a {
+    color: var(--azul);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .orc-selo {
+    align-self: flex-start;
+    margin-bottom: 4px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: #eef2fb;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    color: var(--azul);
+  }
+
+  .orc-bloco {
+    margin-top: 12px;
+    padding: 4px 16px 18px;
+    border-left: 2px solid var(--azul);
+    background: #fafbfd;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .orc-chips-topo {
+    margin-top: 16px;
+  }
+
+  .orc-largo {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .orc-email-topo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 1px solid var(--graphite);
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
+    background: var(--charcoal);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .orc-email-topo .ic {
+    color: var(--azul);
+  }
+
+  .orc-email-topo span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+
+  .orc-email-topo small {
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--smoke);
+  }
+
+  .orc-email-corpo {
+    padding: 16px;
+    border: 1px solid var(--graphite);
+    border-radius: 0 0 10px 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+
+  .orc-upload + .orc-toggle,
+  .orc-upload + .orc-info {
+    margin-top: 16px;
+  }
+
+  /* Modo de captura para o PDF: barra e aviso entram no fluxo da página. */
+  html.shot .orc-acao {
+    position: static;
+  }
+
+  html.shot .orc-toast {
+    position: static;
+    width: auto;
+    margin: 0 0 16px;
+    transform: none;
+  }
+
+  html[data-secao] main {
+    padding-top: calc(80px + var(--faixa));
+  }
+
+  @media (max-width: 900px) {
+    .orc {
+      padding-top: calc(68px + var(--faixa) + 24px);
+    }
+    html[data-secao] main {
+      padding-top: calc(68px + var(--faixa));
+    }
+  }
+
+  @media (max-width: 420px) {
+    .orc-salvo-extra {
+      display: none;
+    }
+    .orc-etapas li {
+      font-size: 11px;
+    }
+    .orc-opcao {
+      gap: 12px;
+      padding: 12px;
+    }
+  }
+</style>

@@ -12,6 +12,10 @@ Registro cronológico do que foi feito. Serve para retomar contexto em sessões 
 - Métricas: alcance qualificado (% na região), taxa de engajamento com peso em salvamentos/compartilhamentos, taxa de conversão (conversas de WhatsApp ÷ cliques, com etiqueta de origem). Crise hipotética: estampa de uniforme escolar descascando, exposta em grupo de Facebook da cidade.
 - Citação do material da PUC alinhada à convenção do banco: `(PUCPR, [2025]a–h)` — data tirada de "Fonte: o autor, 2025" nas imagens. 8 unidades + documento institucional da MEGA-WR registrados no `BANCO-DE-REFERENCIAS.md`.
 - Rascunho completo salvo; aguarda revisão do Yan. Formato final (docx/PDF em ABNT) ainda não gerado.
+- **18/09 — versão de entrega:** introdução passa a dizer que a MEGA-WR é a **empresa dos pais do Yan** e que o trabalho serve para ajudá-los (pedido do Yan). Revisão completa: 19 quadros e 1 tabela numerados, com título e fonte (NBR 14724); calendário sem a coluna repetida de canal; citação longa encurtada para ficar abaixo de 3 linhas; aspas diretas com "não paginado"; siglas soltas removidas (B2B); novo Quadro 12 com exemplo de legenda no tom da marca; conclusão amarra o plano como proposta real para a empresa.
+- Trabalho movido para pasta própria `AS2 - Planejamento de conteúdo MEGA-WR/` (`TRABALHO.md` + `gerar_pdf.py` + PDF). Gerador adaptado do da AS2 de UX, com duas melhorias: **capa fora da contagem** (numeração começa na folha de rosto e aparece a partir da Introdução, NBR 14724) e **folha de rosto** com natureza do trabalho. Sumário com 3 níveis, conferido; nenhuma página órfã além de fim de seção.
+- `YanSuyama_AS2_GestaoConteudo.pdf` — 29 páginas, revisado página a página. Capa e folha de rosto com **Leme** (cidade do Yan) e, na folha de rosto, **Tutoria: Talita Leuçz** — ambos informados pelo Yan em 18/09; tutoria também registrada no `PAINEL` e no `INFO.md`.
+- **18/09 — versão condensada (29 → 18 páginas),** a pedido do Yan (meta de 15 a 20). Todos os itens do enunciado e todas as unidades citadas foram mantidos. Cortes: subseções 2.1.1–2.1.3 viraram parágrafos; persona, públicos e valores saíram dos quadros e foram para o texto; a justificativa (antiga 2.5) entrou na 2.3; distribuição semanal e fluxo de produção viraram texto; as três métricas foram para um quadro só; o diagnóstico da 3.2 virou parágrafo; as rotinas de relacionamento viraram lista; a matriz de respostas passou para 6 casos; os níveis de crise viraram texto e as fases, um quadro (a primeira resposta entra dentro dele); "o que não fazer" virou parágrafo. Resultado: 10 quadros e 1 tabela (antes, 19 quadros e 1 tabela). A versão de 29 páginas não foi versionada.
 
 ## 16/09/2026 — AS2 de Gestão de Anúncios: análise de resultados e otimização do plano de mídia
 
@@ -24,7 +28,44 @@ Registro cronológico do que foi feito. Serve para retomar contexto em sessões 
 - **Produzido** em `Gestão de Anúncios em Canais Sociais/AS2 - Otimização do Plano de Mídia MEGA-WR/`: `TRABALHO.md`, `(rascunho).pptx` com 24 slides e gráficos nativos, e planilha de dados com fórmulas conferidas no Excel. Renderização revisada slide a slide pelo PowerPoint; exportação para PDF testada.
 - **Dados reais usados:** prazo de 20 a 30 dias e horário de atendimento, conferidos em megawr.com.br em 16/09/2026. Preço e ticket médio são **premissas hipotéticas**.
 - **Citações:** unidades 03 a 08 como `PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ, 2026a–f`, no padrão da AS1 da matéria. As outras matérias usam `[2026?]`/`[2025]`; ver nota no banco de referências.
-- **Pendências:** prazo, peso e rubrica; nome do(a) professor(a) na capa; revisão do Yan; exportar PDF.
+- **Pendências:** prazo, peso e rubrica; revisão do Yan; exportar PDF.
+- **18/09 — versão de entrega:** Yan aprovou ticket médio e formato de citação e preencheu a professora (Cláudia Osna Geber). Arquivo limpo para entrega: sem "(rascunho)" no nome, capa com "Professora", nota repetida do slide 2 removida e metadado "generated using python-pptx" apagado (autor e título agora são do Yan). PDF `YanSuyama_AS2_GestaoAnuncios.pdf` exportado e conferido. Falta só a leitura final e o envio.
+
+## 18/09/2026 — AS2 Construção de Interfaces: versão condensada (45 → 24 páginas)
+
+- A pedido do Yan (meta de 20 a 25 páginas). Todos os itens do enunciado, dados, falas, citações e os dois apêndices foram mantidos; apêndices idênticos.
+- Cortes: perfil e principais respostas num quadro só; personas lado a lado num quadro; 8.3 a 8.5 viraram um quadro (dificuldades, sugestões, pontos positivos); 7.2 virou parágrafo; seções 5.3 e 5.4 trocaram de ordem (explicação antes do fluxo).
+- Figuras: telas em grades de 3 e 4 (marcador `[[GRADE]]` no gerador); saíram as figuras de "depois" que repetiam telas da seção 6 e a tela do erro; antes e depois ficou numa figura só (passo 4 e resumo). 14 → 7 figuras.
+- Diagramação: seções sem quebra de página (só apêndices em página nova), sumário em 1 página, quadros em espaçamento simples, Apêndice A em duas colunas e apêndices em 10 pt.
+- Capa com **Professor: Eduardo Alexandre Franciscon** (também no `INFO.md`). Versão de 45 páginas guardada fora do repositório, na pasta temporária da sessão.
+
+## 18/09/2026 — AS2 Construção de Interfaces: versão de entrega
+
+- Yan aprovou o conteúdo. Limpeza para entrega: saiu o bloco de notas internas do topo do `TRABALHO.md` (a documentação dos marcadores foi para o `gerar_pdf.py`) e o código morto do aviso de pesquisa simulada.
+- Frases com tom de recado ao professor reescritas sem mudar o conteúdo: "Dois cuidados declarados" virou "Cuidados na análise"; na 8.1, a limitação de 2 participantes continua explícita, sem "o enunciado pede três" e "por causa do prazo".
+- Figuras sem a faixa "Protótipo acadêmico": escondida só no modo de captura (`?shot`); no site publicado ela continua. Recortes deslocados em 52 px.
+- Corrigida a numeração das figuras (a do erro no campo saía como Figura 4 na página 26); agora 1 a 14 na ordem do texto.
+- Capa com cidade (Leme), como nas outras AS2. Professor(a) não consta: `INFO.md` ainda sem o nome.
+
+## 18/09/2026 — AS2: trabalho reescrito com as entrevistas reais; revisão do protótipo aguarda publicação
+
+- **Pesquisa real:** o Yan conversou com 2 pessoas de Leme em 17/09 — P1, analista de RH de uma indústria que já é cliente da MEGA-WR (compra com processo de Compras: 3 orçamentos, CNPJ, nota, boleto faturado), e P2, dono de academia de bairro (decide e paga, só celular, desistiu pelo mínimo e pelo medo de encalhar). O registro foi estruturado por IA; entraram no trabalho só falas e observações. Trechos marcados como "[suposição]" e a reação no condicional de P2 ficaram de fora.
+- **A simulação saiu por completo do PDF** (avisos vermelhos, P1/P2 simulados, Patrícia e Rafael). Novas personas: **Juliana**, a compradora da indústria, e **Marcos**, o dono da academia.
+- **Declarado no método:** P1 trabalha numa empresa que já é cliente (viés); a parte da proposta foi feita com a versão preliminar, então os tempos são aproximados; o teste teve **2 participantes**, e o enunciado pede 3 (limitação registrada na seção 8.1).
+- **Protótipo revisado com o feedback real** (`?v=1` = versão apresentada; sem parâmetro = revisada): bloco "Compra pela empresa" (CNPJ opcional, nota, forma de pagamento), envio por e-mail e "Baixar PDF", planilha de tamanhos, salvamento automático no aparelho, "Não sei, quero indicação" em primeiro, posição do logo opcional ("Combinar depois"), atalho "Fale direto no WhatsApp", "Quero ver tecido e modelo antes de fechar" e "Loja em Leme" junto do botão. Fluxo testado de ponta a ponta no Node.
+- **Ficaram como recomendação à MEGA-WR** (dependem da empresa): faixa de preço, prazo de resposta, pré-venda com pagamento individual e legging personalizada para academias.
+- **PDF:** 45 páginas, com as figuras refeitas (pares antes e depois) e recortes via `arquivo.png@y0-y1` no `gerar_pdf.py`.
+- **Bloqueio na Vercel resolvido:** as publicações feitas de dentro da pasta ficavam `BLOCKED` porque a CLI anexava o commit do repositório da faculdade, e o e-mail do autor (`techgoldenia@gmail.com`) não bate com nenhuma conta do GitHub ligada à Vercel. **Solução:** fazer `vercel build --prod` na pasta e publicar com `vercel deploy --prebuilt --prod` a partir de uma cópia de `.vercel/project.json` + `.vercel/output` **fora do git** (passo a passo no `README.md` da cópia). A configuração do git não foi alterada. Revisão publicada e conferida no ar; o site oficial continua igual.
+
+## 18/09/2026 — AS2: protótipo refeito como versão de teste do site real da MEGA-WR
+
+- **Pedido do Yan:** criar o protótipo dentro de uma cópia do site da MEGA-WR, com toda a identidade visual, e publicar na Vercel. Regra: **não alterar o site no ar**.
+- **Cópia em `AS2 - Projeto UX UI MEGA-WR/site-prototipo-megawr/`** (Astro), feita a partir de `0-Claude/Clientes/MEGA WR/Site`, que não foi tocado. Ficaram fora da cópia: `node_modules`, `dist`, `.vercel` (aponta para o projeto antigo `mega-wr`), `.env.local`, `wrangler.jsonc` (deploy do site oficial) e as notas internas.
+- **O site oficial está no Cloudflare, não na Vercel** (`LANCAMENTO.md`). A versão de teste vai para um **projeto novo e separado** na Vercel, e nunca para o `mega-wr`.
+- **Proteções da versão de teste:** `noindex` em todas as páginas, `robots.txt` com `Disallow: /`, sem sitemap e faixa "Protótipo acadêmico · PUCPR · versão de teste" no topo. A tela final não envia nada ao WhatsApp real, para as pessoas testando não mandarem mensagem à empresa.
+- **O que foi acrescentado à cópia:** página `/orcamento` (4 passos, resumo, confirmação e pedido em grupo, com `?v=1`, `?p=` e `?linha=`); "Montar meu orçamento" no topo, no hero e no fechamento; condições abaixo do botão; "Orçar linha" nos cards; seção de dúvidas frequentes; passo 01 de "Como trabalhamos" reescrito.
+- **PDF atualizado** com as telas da versão do site (`Prototipo/telas-site/`, geradas por `gerar_telas_site.py`) e com o texto das seções 5.1, 6.1, 6.2 e 7.1 ajustado. As telas do protótipo avulso (`Prototipo/index.html`, `telas/`) ficam como histórico.
+- **Publicado na Vercel:** https://site-prototipo-megawr.vercel.app (conta `yansuyama-1701`, projeto novo `site-prototipo-megawr`, separado do `mega-wr`). Público, com `noindex`. O link entrou na seção 7.1 do PDF. O site oficial (megawr.com.br) foi conferido depois e está igual. Para republicar: `npx vercel deploy --prod` dentro de `site-prototipo-megawr/`, que agora está ligado ao projeto novo.
 
 ## 16/09/2026 — AS2 de Construção de Interfaces: versão preliminar completa, com pesquisa simulada
 

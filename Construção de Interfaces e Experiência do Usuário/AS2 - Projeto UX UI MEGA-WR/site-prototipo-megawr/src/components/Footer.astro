@@ -1,0 +1,132 @@
+---
+import { empresa, redes, whatsappLink, CTA_PADRAO } from '../config';
+---
+
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <img src="/img/logo.png" alt="MEGA-WR Confecções" width="170" height="31" />
+      <a class="btn btn-ghost" href={whatsappLink(CTA_PADRAO)} target="_blank" rel="noopener">
+        Falar no WhatsApp
+      </a>
+    </div>
+
+    <div class="cols">
+      <div>
+        <p class="label">Endereço</p>
+        <p>{empresa.endereco}</p>
+      </div>
+      <div>
+        <p class="label">Contato</p>
+        <p>
+          <a href={whatsappLink(CTA_PADRAO)} target="_blank" rel="noopener">
+            {empresa.whatsappExibicao}
+          </a><br />
+          <a href={`mailto:${empresa.email}`}>{empresa.email}</a>
+        </p>
+      </div>
+      <div>
+        <p class="label">Horário</p>
+        <p>{empresa.horario}</p>
+      </div>
+      <div>
+        <p class="label">Redes sociais</p>
+        <ul class="redes">
+          {
+            redes.map((r) => (
+              <li>
+                <a href={r.url} target="_blank" rel="noopener" aria-label={`${r.nome} da MEGA-WR`}>
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <rect x="2.5" y="2.5" width="19" height="19" rx="5.5" />
+                    <circle cx="12" cy="12" r="4.2" />
+                    <circle cx="17.4" cy="6.6" r="1.2" class="cheio" />
+                  </svg>
+                  {r.handle}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="base">
+      <p>© {new Date().getFullYear()} {empresa.nome} · CNPJ {empresa.cnpj}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--graphite);
+    padding: 64px 0 40px;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-bottom: 40px;
+  }
+
+  .top img {
+    width: 170px;
+    height: auto;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 40px;
+    padding: 40px 0;
+    border-top: 1px solid var(--graphite);
+  }
+
+  .cols p:not(.label) {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .cols a:hover {
+    color: var(--azul);
+  }
+
+  .redes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .redes a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* Icone herda a cor do link, inclusive no hover. */
+  .redes svg {
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+  }
+
+  .redes svg .cheio {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .base {
+    padding-top: 32px;
+    border-top: 1px solid var(--graphite);
+  }
+
+  .base p {
+    font-size: 13px;
+    color: var(--smoke);
+  }
+</style>

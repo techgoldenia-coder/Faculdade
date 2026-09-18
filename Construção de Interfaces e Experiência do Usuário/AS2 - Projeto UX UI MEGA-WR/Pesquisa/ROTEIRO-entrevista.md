@@ -77,7 +77,7 @@ Abra `megawr.com.br` no celular da pessoa e passe o aparelho para ela.
 - **Perfil B2B:** "15 camisas polo bordadas com o logo da sua empresa"
 - **Perfil B2C:** "2 scrubs com o seu nome bordado"
 
-**Cronometre** do início até o toque no botão. **Não ajude.** Se a pessoa travar: "o que você está procurando agora?"
+**Cronometre** do início até o toque no botão. **Não deixe enviar a mensagem**: o WhatsApp que abre é o da MEGA-WR de verdade. **Não ajude.** Se a pessoa travar: "o que você está procurando agora?"
 
 ---
 
@@ -85,7 +85,7 @@ Abra `megawr.com.br` no celular da pessoa e passe o aparelho para ela.
 
 > "Eu desenhei uma sugestão de como esse pedido poderia funcionar. Não fui eu que fiz o site da empresa, então pode criticar à vontade: quero justamente saber o que não funciona."
 
-Abra o link do protótipo e peça **a mesma tarefa**. Cronometre de novo, até a tela de resumo.
+Abra **https://site-prototipo-megawr.vercel.app** e peça **a mesma tarefa**. Nada é enviado nessa versão. Cronometre de novo, até a tela de resumo.
 
 **Anotar durante o uso:**
 

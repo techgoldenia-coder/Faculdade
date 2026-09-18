@@ -1,7 +1,7 @@
 # Gestão de Conteúdo em Mídias Sociais
 
 - **Semestre:** 2026/2 — **cursando**
-- **Professor(a):** `[PREENCHER]`
+- **Professor(a):** Talita Leuçz (tutoria)
 - **Formato:** EAD / PUCPR Online
 - **Dia e horário:** `[PREENCHER]`
 

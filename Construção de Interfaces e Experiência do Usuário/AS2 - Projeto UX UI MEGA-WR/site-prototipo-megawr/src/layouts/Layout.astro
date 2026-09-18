@@ -1,0 +1,101 @@
+---
+import '@fontsource-variable/saira';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import {
+  INDEXAR_SITE,
+  empresa,
+  enderecoEstruturado,
+  horarioEstruturado,
+  redes,
+} from '../config';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+// URLs absolutas — o WhatsApp e o Facebook ignoram og:image relativo,
+// entao a previa do link so aparece com o endereco completo.
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/img/fachada.jpg', Astro.site);
+
+// Ficha de negocio local para o Google (busca e Maps).
+const dadosDoNegocio = {
+  '@context': 'https://schema.org',
+  '@type': 'ClothingStore',
+  name: empresa.nome,
+  description,
+  url: Astro.site?.href,
+  image: ogImage.href,
+  telephone: `+${empresa.whatsapp}`,
+  email: empresa.email,
+  taxID: empresa.cnpj,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${enderecoEstruturado.rua} — ${enderecoEstruturado.bairro}`,
+    addressLocality: enderecoEstruturado.cidade,
+    addressRegion: enderecoEstruturado.estado,
+    addressCountry: enderecoEstruturado.pais,
+    ...(enderecoEstruturado.cep && { postalCode: enderecoEstruturado.cep }),
+  },
+  openingHoursSpecification: horarioEstruturado.map((faixa) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: faixa.dias,
+    opens: faixa.abre,
+    closes: faixa.fecha,
+  })),
+  areaServed: { '@type': 'Country', name: 'Brasil' },
+  sameAs: redes.map((rede) => rede.url),
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    {!INDEXAR_SITE && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:site_name" content={empresa.nome} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- Versao de teste: ?v=1 mostra a proposta antes do feedback; ?shot e ?secao
+         servem so para gerar as imagens do trabalho academico. -->
+    <script is:inline>
+      (function () {
+        var q = new URLSearchParams(location.search), h = document.documentElement;
+        if (q.get('v') === '1') h.classList.add('v1');
+        if (q.has('shot')) h.classList.add('shot');
+        if (q.get('secao')) h.setAttribute('data-secao', q.get('secao'));
+      })();
+    </script>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(dadosDoNegocio)}
+    />
+  </head>
+  <body>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

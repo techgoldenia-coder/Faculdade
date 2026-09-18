@@ -1,7 +1,7 @@
 # Construção de Interfaces e Experiência do Usuário
 
 - **Semestre:** 2026/2 — **cursando**
-- **Professor(a):** `[PREENCHER]`
+- **Professor(a):** Eduardo Alexandre Franciscon
 - **Formato:** EAD / plataforma PUC-PR (`pucpr.grupoa.education`)
 - **Dia e horário:** `[PREENCHER]`
 

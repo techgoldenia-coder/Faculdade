@@ -1,0 +1,716 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import CardLinha from '../components/CardLinha.astro';
+import { empresa, whatsappLink, CTA_PADRAO, ORCAMENTO_URL } from '../config';
+
+// Imagens importadas de src/assets (e nao referenciadas por caminho em public/):
+// so assim o build gera webp e as variacoes de srcset para cada uma.
+import heroImg from '../assets/img/hero.jpg';
+import linhaSaude from '../assets/img/linha-saude.jpg';
+import linhaUniformes from '../assets/img/linha-uniformes.jpg';
+import linhaFitness from '../assets/img/linha-fitness.jpg';
+import persBordado from '../assets/img/pers-bordado.jpg';
+import persSilk from '../assets/img/pers-silk.jpg';
+import persDtf from '../assets/img/pers-dtf.jpg';
+import clienteSesi from '../assets/img/cliente-sesi.jpg';
+import clienteLiceu from '../assets/img/cliente-liceu.jpg';
+import clienteBolini from '../assets/img/cliente-bolini.jpg';
+import fachada2 from '../assets/img/fachada-2.jpg';
+
+// Larguras de exibicao calculadas sobre 1152px de conteudo (--page 1200 menos 24px
+// de padding de cada lado). Sem isso o celular baixaria a versao de desktop.
+const sizesPers =
+  '(max-width: 608px) calc(100vw - 48px), (max-width: 908px) calc((100vw - 88px) / 2), 357px';
+// Clientes usa a mesma grade da personalizacao, entao as larguras sao as mesmas.
+const sizesClientes = sizesPers;
+const sizesSobre = '(max-width: 860px) calc(100vw - 48px), 544px';
+
+const linhas = [
+  {
+    titulo: 'Saúde',
+    descricao:
+      'Jalecos e scrubs em microfibra de gabardine, para clínicas médicas, odontológicas e profissionais autônomos.',
+    itens: ['Jalecos', 'Scrubs e pijamas hospitalares'],
+    imagem: linhaSaude,
+    acento: 'var(--azul)',
+    href: `${ORCAMENTO_URL}?linha=saude`,
+  },
+  {
+    titulo: 'Uniformes',
+    descricao:
+      'Profissional, escolar, esportivo e industrial. Portfólio completo para empresas, indústrias e colégios.',
+    itens: [
+      'Camisa social, polo, camiseta e camisete',
+      'Calça de brim e jaleco para indústria',
+      'Linha escolar infantil e adulto',
+    ],
+    imagem: linhaUniformes,
+    acento: 'var(--vermelho)',
+    href: `${ORCAMENTO_URL}?linha=uniformes`,
+  },
+  {
+    titulo: 'Fitness',
+    descricao:
+      'Leggings, bermudas e camisetas dry-fit para academias, clubes esportivos e equipes.',
+    itens: ['Legging e bailarina', 'Bermudas, blusas e calças'],
+    imagem: linhaFitness,
+    acento: 'var(--vermelho)',
+    href: `${ORCAMENTO_URL}?linha=fitness`,
+  },
+];
+
+const personalizacoes = [
+  {
+    nome: 'Bordado',
+    img: persBordado,
+    quando: 'Quando a peça precisa durar e transmitir seriedade. Padrão para jaleco e camisa social.',
+  },
+  {
+    nome: 'Silk',
+    img: persSilk,
+    quando: 'Melhor custo em volume, com poucas cores. Ideal para camiseta de evento e uniforme escolar.',
+  },
+  {
+    nome: 'DTF',
+    img: persDtf,
+    quando: 'Arte colorida, degradê ou detalhe fino — sem limite de cores e sem perder o toque do tecido.',
+  },
+];
+
+const passos = [
+  { n: '01', t: 'Você monta o pedido aqui', d: 'Em 4 passos, sem cadastro: produto, quantidade, personalização e entrega. O pedido chega pronto ao nosso WhatsApp.' },
+  { n: '02', t: 'Definimos modelo e tecido', d: 'Indicamos o que funciona melhor para o uso e o orçamento.' },
+  { n: '03', t: 'Você aprova a personalização', d: 'Logo, cores e posicionamento aprovados antes de produzir.' },
+  { n: '04', t: 'Produzimos e entregamos', d: '20 a 30 dias. Retirada na loja, entrega local ou envio para todo o Brasil.' },
+];
+
+const duvidas = [
+  { q: 'Qual é o pedido mínimo?', a: '10 peças por modelo. Precisa de menos? Monte um pedido em grupo com colegas: cada um escolhe tamanho e nome pelo mesmo link.' },
+  { q: 'Qual é o prazo de produção?', a: 'De 20 a 30 dias após a confirmação do pedido.' },
+  { q: 'Vocês entregam na minha cidade?', a: 'Sim. Retirada na loja em Leme, entrega local ou envio para todo o Brasil.' },
+  { q: 'Qual a diferença entre bordado, silk e DTF?', a: 'Bordado é mais durável e sóbrio. Silk tem melhor custo em volume, com poucas cores. DTF é uma estampa digital para artes coloridas e detalhes finos.' },
+  { q: 'Como é definido o preço?', a: 'Não temos tabela fixa: o valor depende do modelo, do tecido, da quantidade e da personalização. Você recebe o orçamento pelo WhatsApp.' },
+  { q: 'Quais tamanhos vocês fazem?', a: 'Do infantil ao plus size, conforme o modelo escolhido.' },
+  { q: 'Posso ver o tecido antes de fechar?', a: 'Sim. Na nossa loja, na Rua Bernardino de Campos, 1055, em Leme, você vê tecido, modelagem e acabamento antes de fechar o pedido. No orçamento, é só marcar essa opção.', v2: true },
+];
+
+const clientes = [
+  { nome: 'SESI', img: clienteSesi, tipo: 'Uniforme escolar' },
+  { nome: 'Liceu', img: clienteLiceu, tipo: 'Uniforme escolar' },
+  { nome: 'Bolini', img: clienteBolini, tipo: 'Uniforme profissional' },
+];
+---
+
+<Layout
+  title="MEGA-WR Confecções — Uniformes profissionais, escolares e da saúde | Leme/SP"
+  description="Confecção familiar em Leme/SP há mais de 10 anos. Uniformes profissionais, escolares, da saúde e fitness com bordado, silk e DTF. Pedido mínimo de 10 peças. Entrega para todo o Brasil."
+>
+  <!-- HERO -->
+  <section id="topo" class="hero">
+    <Image
+      class="hero-bg"
+      src={heroImg}
+      alt=""
+      widths={[768, 1280, 1920, 2560]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="scrim"></div>
+
+    <div class="wrap hero-conteudo">
+      <h1>Uniformes que <em>profissionalizam</em> sua empresa.</h1>
+      <p class="sub">
+        Confecção de uniformes profissionais para empresas, escolas, clínicas e academias. Produção
+        própria, tecidos de qualidade e atendimento personalizado!
+      </p>
+
+      <div class="acoes">
+        <a class="btn btn-primary" href={ORCAMENTO_URL}>Montar meu orçamento</a>
+        <a class="btn btn-ghost" href="#linhas">Ver as linhas</a>
+      </div>
+      <ul class="garantias">
+        <li>Mínimo de 10 peças por modelo</li>
+        <li>Produção em 20 a 30 dias</li>
+        <li>4 passos, sem cadastro</li>
+        <li class="so-v2">Loja em Leme para ver o tecido</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PROVA RÁPIDA -->
+  <div class="faixa">
+    <div class="wrap itens">
+      <div><strong>Atendimento personalizado</strong><span>Confeccionamos de acordo com sua necessidade</span></div>
+      <div><strong>Produção própria</strong><span>Trabalhamos somente com tecidos de alta qualidade</span></div>
+      <div><strong>Portfólio de trabalho</strong><span>Linhas Profissional, Fitness e Saúde</span></div>
+      <div><strong>Todo o Brasil</strong><span>Atendimento em todo o país</span></div>
+    </div>
+  </div>
+
+  <!-- LINHAS -->
+  <section id="linhas">
+    <div class="wrap">
+      <p class="label">Linhas</p>
+      <h2>Conheça nossas linhas de <em>confecção</em>!</h2>
+      <p class="intro">
+        Três linhas com grade de tamanhos completa e tecidos definidos para atender a sua
+        necessidade.
+      </p>
+
+      <div class="grid-linhas">
+        {linhas.map((l) => <CardLinha {...l} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSONALIZAÇÃO -->
+  <section id="personalizacao" class="alt">
+    <div class="wrap">
+      <p class="label">Personalização</p>
+      <h2 class="largo">Uniformes com a sua marca para <em>todas as ocasiões</em>.</h2>
+
+      <div class="grid-pers">
+        {
+          personalizacoes.map((p) => (
+            <div class="pers">
+              <div class="pers-foto">
+                <Image
+                  src={p.img}
+                  alt={`Uniforme personalizado em ${p.nome} pela MEGA-WR Confecções`}
+                  widths={[400, 600, 800]}
+                  sizes={sizesPers}
+                  loading="lazy"
+                />
+              </div>
+              <h3>{p.nome}</h3>
+              <p>{p.quando}</p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="nota">
+        Não sabe qual escolher? No orçamento, marque "quero indicação": nós sugerimos a melhor opção
+        considerando tecido, volume e a sua demanda.
+      </p>
+    </div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section id="clientes">
+    <div class="wrap">
+      <p class="label">Nossos clientes</p>
+      <h2 class="largo">Empresas e escolas que <em>confiam</em> em nosso trabalho.</h2>
+      <p class="intro">
+        A maior parte dos nossos clientes chega por indicação e isso é um orgulho para nós. Buscamos
+        parcerias transparentes e duradouras.
+      </p>
+
+      <div class="grid-clientes">
+        {
+          clientes.map((c) => (
+            <figure class="cliente">
+              <Image
+                src={c.img}
+                alt={`${c.tipo} produzido pela MEGA-WR para ${c.nome}`}
+                widths={[400, 600, 800]}
+                sizes={sizesClientes}
+                loading="lazy"
+              />
+              <figcaption>
+                <strong>{c.nome}</strong>
+                <span>{c.tipo}</span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="alt">
+    <div class="wrap">
+      <p class="label">Como trabalhamos</p>
+      <h2>Desde o primeiro contato à <em>entrega</em>.</h2>
+
+      <div class="grid-passos">
+        {
+          passos.map((p) => (
+            <div class="passo">
+              <span class="num">{p.n}</span>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre">
+    <div class="wrap sobre">
+      <div class="sobre-txt">
+        <p class="label">Sobre</p>
+        <h2 class="largo">Uniformes de qualidade<br />e <em>parcerias duradouras</em>.</h2>
+        <p>
+          Há mais de dez anos produzimos uniformes profissionais para empresas, indústrias, escolas,
+          clínicas e academias, com uma convicção simples: entregar com qualidade, atendimento
+          transparente e foco em parcerias duradouras.
+        </p>
+        <p>
+          Atendemos empresas e indústrias em Leme e região desde 2019, e a maior parte de quem
+          começou segue com a gente até hoje. Buscamos sempre entregar aquilo que o cliente precisa,
+          com um atendimento personalizado, para encontrar a melhor solução na hora de comunicar sua
+          marca e o seu profissionalismo.
+        </p>
+        <p>
+          Nossa sede fica na Rua Bernardino de Campos, 1055 — Vila Santucci, Leme/SP. Aqui você pode
+          ver de perto o melhor tecido, modelagem e acabamento antes de fechar o pedido.
+        </p>
+        <a class="btn btn-ghost" href={whatsappLink(CTA_PADRAO)} target="_blank" rel="noopener">
+          Fale com a gente
+        </a>
+      </div>
+      <div class="sobre-img">
+        <Image
+          src={fachada2}
+          alt="Fachada da loja da MEGA-WR Confecções em Leme, São Paulo"
+          widths={[400, 600, 800, 1100]}
+          sizes={sizesSobre}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- DÚVIDAS FREQUENTES (proposta AS2) -->
+  <section id="duvidas" class="alt">
+    <div class="wrap duvidas">
+      <div>
+        <p class="label">Dúvidas frequentes</p>
+        <h2>Antes de pedir seu <em>orçamento</em>.</h2>
+      </div>
+      <div class="lista-duvidas">
+        {
+          duvidas.map((d, i) => (
+            <details open={i < 2} class={d.v2 ? 'so-v2' : undefined}>
+              <summary>{d.q}</summary>
+              <p>{d.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="fechamento">
+    <div class="wrap">
+      <h2>Monte seu pedido em 4 passos<br />ou <em>fale direto com a gente</em>.</h2>
+      <p class="intro">
+        O pedido chega ao nosso WhatsApp já organizado, e o orçamento sai conforme a peça, o tecido e
+        a quantidade que você precisa.
+      </p>
+      <div class="acoes">
+        <a class="btn btn-primary" href={ORCAMENTO_URL}>Montar meu orçamento</a>
+        <a class="btn btn-ghost" href={whatsappLink(CTA_PADRAO)} target="_blank" rel="noopener">
+          Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 0 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    filter: saturate(0.85) contrast(1.05);
+  }
+
+  /* Scrim: camada de legibilidade, nao decoracao. */
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.15) 35%,
+      rgba(0, 0, 0, 0.85) 100%
+    );
+  }
+
+  .hero-conteudo {
+    position: relative;
+    width: 100%;
+    color: var(--white);
+  }
+
+  /* Hero fica sobre foto escura — texto e acessorios em branco, independente do tema claro. */
+  .hero h1 {
+    max-width: 16ch;
+    color: var(--white);
+  }
+
+  .hero :global(.label) {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .hero :global(.btn-ghost) {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: var(--white);
+  }
+
+  .hero :global(.btn-ghost:hover) {
+    border-color: var(--white);
+  }
+
+  .sub {
+    max-width: 52ch;
+    margin-top: 24px;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .acoes {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .tel {
+    font-size: 15px;
+    color: var(--smoke);
+  }
+
+  /* Condicoes junto do botao principal (proposta AS2) */
+  .garantias {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 28px 0 0;
+    padding: 0;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .garantias li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .garantias li::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f3f9c' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") center / 10px no-repeat;
+  }
+
+  /* Faixa de prova */
+  .faixa {
+    border-top: 1px solid var(--graphite);
+    border-bottom: 1px solid var(--graphite);
+  }
+
+  .itens {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 32px;
+    padding: 40px 24px;
+  }
+
+  .itens div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .itens strong {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .itens span {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--smoke);
+  }
+
+  /* Seções */
+  .alt {
+    background: var(--charcoal);
+    border-top: 1px solid var(--graphite);
+    border-bottom: 1px solid var(--graphite);
+  }
+
+  .intro {
+    margin-top: 24px;
+    font-size: 17px;
+  }
+
+  /* Titulo que preenche a linha ate o fim, em vez de equilibrar as quebras. */
+  h2.largo {
+    text-wrap: normal;
+  }
+
+  .grid-linhas {
+    display: grid;
+    /* min() para o card nao ficar mais largo que a tela em aparelhos de 320px. */
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  /* Personalização */
+  .grid-pers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
+    margin-top: 64px;
+  }
+
+  .pers {
+    border-top: 2px solid var(--vermelho);
+  }
+
+  .pers-foto {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 24px;
+  }
+
+  .pers-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.9) contrast(1.05);
+    transition: transform 0.6s var(--ease);
+  }
+
+  .pers:hover .pers-foto img {
+    transform: scale(1.03);
+  }
+
+  .pers p {
+    margin-top: 12px;
+    font-size: 15px;
+  }
+
+  .nota {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--graphite);
+    font-size: 15px;
+  }
+
+  /* Clientes */
+  /* Mesma grade da personalizacao (colunas e gap) para os cards terem a mesma largura. */
+  .grid-clientes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
+    margin-top: 64px;
+  }
+
+  .cliente {
+    margin: 0;
+  }
+
+  /* 8/9 = mesma largura do card de personalizacao (4/3) com altura 50% maior. */
+  .cliente img {
+    width: 100%;
+    aspect-ratio: 8 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    filter: saturate(0.9);
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 16px;
+  }
+
+  figcaption strong {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  figcaption span {
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--smoke);
+  }
+
+  /* Passos */
+  .grid-passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 40px;
+    margin-top: 64px;
+  }
+
+  .passo {
+    padding-top: 24px;
+    border-top: 1px solid var(--graphite);
+  }
+
+  .num {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--azul);
+  }
+
+  .passo h3 {
+    margin-top: 16px;
+  }
+
+  .passo p {
+    margin-top: 8px;
+    font-size: 15px;
+  }
+
+  /* Sobre */
+
+  /* A quebra do titulo e manual (<br />). Fonte um pouco menor que o h2 padrao
+     para as duas linhas caberem na coluna sem requebrar. */
+  .sobre-txt h2 {
+    font-size: clamp(26px, 3.9vw, 50px);
+  }
+
+  .sobre {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 64px;
+  }
+
+  .sobre-txt p:not(.label) {
+    margin-top: 24px;
+    font-size: 17px;
+    max-width: 52ch;
+  }
+
+  .sobre-txt .btn {
+    margin-top: 40px;
+  }
+
+  .sobre-img img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    /* Ancora no terco superior: o crop centrado pegava calcada em vez da fachada. */
+    object-position: center 28%;
+    border-radius: 10px;
+    filter: saturate(0.85);
+  }
+
+  /* Duvidas */
+  .duvidas {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .lista-duvidas details {
+    border-top: 1px solid var(--graphite);
+  }
+
+  .lista-duvidas details:last-child {
+    border-bottom: 1px solid var(--graphite);
+  }
+
+  .lista-duvidas summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 0;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .lista-duvidas summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .lista-duvidas summary::after {
+    content: '+';
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--azul);
+  }
+
+  .lista-duvidas details[open] summary::after {
+    content: '–';
+  }
+
+  .lista-duvidas details p {
+    padding: 0 0 20px;
+    font-size: 15px;
+  }
+
+  /* Fechamento */
+  .fechamento {
+    border-top: 1px solid var(--graphite);
+    text-align: center;
+  }
+
+  .fechamento h2 {
+    margin: 0 auto;
+    text-wrap: normal;
+  }
+
+  .fechamento .intro {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .fechamento .acoes {
+    justify-content: center;
+  }
+
+  @media (max-width: 860px) {
+    .duvidas {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .sobre {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .sobre-img img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
