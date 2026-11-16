@@ -19,6 +19,10 @@ Mapa objetivo. Atualizado automaticamente quando a estrutura muda.
 
 - `Construção de Interfaces e Experiência do Usuário/` — 2026/2, **cursando**. disciplina completa em 8 PDFs de unidade (UX/UI → usabilidade e design visual → pesquisa e personas → arquitetura da informação → prototipagem → testes de usabilidade → tendências e ética → fechamento) + transcrição das 10 heurísticas de Nielsen e das 8 regras de Shneiderman, que não saem no texto do PDF. Contém `AS2 - Projeto UX UI MEGA-WR/` — trabalho com pasta própria por gerar muitos arquivos: `TRABALHO.md` (fonte do PDF), `Entrega/` (`YanSuyama_ProjetoUXUI.pdf`, `gerar_pdf.py` e `figuras/`), `site-prototipo-megawr/` (cópia de teste do site da MEGA-WR em Astro, com a página `/orcamento`; é o protótipo oficial do trabalho), `Prototipo/` (`telas-site/` + `gerar_telas_site.py`, que geram as figuras do PDF; `index.html`, `telas/` e `gerar_telas.py` são o protótipo avulso anterior, mantido como histórico) e `Pesquisa/` (roteiro de entrevista e questionário, em .md e .docx).
 
+- `Design Experimental/` — 2026/2, **cursando**. Disciplina completa em 8 PDFs (experimentos e design experimental → causalidade → variáveis → tipos de experimento → delineamentos estatísticos → passo a passo, partes 1 e 2 → fechamento) + `Design Experimental - 2.1.pdf`, infográfico da unidade 02 (concepções de pesquisa), quase todo em imagem.
+- `Marketing de relacionamento/` — 2026/2, **cursando**. Disciplina completa em 8 PDFs (conceitos e evolução → consumidor e neuromarketing → CX → customer success → jornada do cliente → CRM → cultura centrada no cliente → fechamento).
+- `Web Analytics e performance digital/` — 2026/2, **cursando**. 7 PDFs (métricas e KPIs → sites e landing pages → GA4 → Google Ads → Meta Ads → experimentação e growth → relatórios e dashboards); unidade 08 a confirmar.
+
 ## Padrão de cada matéria
 
 `INFO.md` (semestre, professor, ementa, avaliações, notas) + `Base de dados/` (todo material de consulta: slides e PDFs do professor, livros, artigos) + trabalhos, anotações e resumos **soltos na raiz da matéria**, sem subpasta.

@@ -29,7 +29,8 @@ Disciplina completa: 8 unidades, todas em `Base de dados/`.
 | Avaliação | Peso | Formato | Prazo | Nota |
 |---|---|---|---|---|
 | **AS1** | `[?]` | múltipla escolha, 2 pts/questão | — | **10** |
-| `[PREENCHER — AS2 / prova]` | | | | |
+| **AS2** | `[?]` | Projeto de UX/UI, PDF único, individual | 18/09/2026 | entregue 21/09 |
+| `[PREENCHER — prova]` | | | | |
 
 ## Bibliografia (das referências das unidades)
 
@@ -58,4 +59,5 @@ Direto: avaliação heurística de sites e Instagram de cliente. As 10 heurísti
 - [x] Material das aulas em dia (unidades 01 a 08 — disciplina completa)
 - [ ] Anotações em dia
 - [x] AS1 entregue — nota 10
-- [ ] AS2 / prova
+- [x] AS2 entregue em 21/09/2026 — aguardando nota
+- [ ] Prova

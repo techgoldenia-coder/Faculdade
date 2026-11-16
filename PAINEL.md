@@ -12,13 +12,14 @@
 | [Construção de Interfaces e Experiência do Usuário](Construção de Interfaces e Experiência do Usuário/INFO.md) | 2026/2 | **Cursando** | `[PREENCHER]` |
 | [Gestão de Anúncios em Canais Sociais](Gestão de Anúncios em Canais Sociais/INFO.md) | 2026/2 | **Cursando** | Cláudia Osna Geber |
 | [Gestão de Conteúdo em Mídias Sociais](Gestão de Conteúdo em Mídias Sociais/INFO.md) | 2026/2 | **Cursando** | Talita Leuçz (tutoria) |
-| `[PREENCHER — demais matérias de 2026/2]` | 2026/2 | Cursando | |
+| [Design Experimental](Design Experimental/INFO.md) | 2026/2 `[VERIFICAR]` | **Cursando** | `[PREENCHER]` |
+| [Marketing de relacionamento](Marketing de relacionamento/INFO.md) | 2026/2 `[VERIFICAR]` | **Cursando** | `[PREENCHER]` |
+| [Web Analytics e performance digital](Web Analytics e performance digital/INFO.md) | 2026/2 `[VERIFICAR]` | **Cursando** | `[PREENCHER]` |
 
 ## Prazos em aberto
 
 | Prazo | Matéria | Entrega | Peso | Status |
 |---|---|---|---|---|
-| 18/09/2026 | Construção de Interfaces | AS2 — Projeto UX/UI (PDF único) | `[?]` | Versão de entrega condensada (24 páginas) — ler, aprovar e enviar |
 | `[dd/mm — confirmar]` | Gestão de Anúncios | AS2 — Análise de resultados e otimização do plano de mídia MEGA-WR (apresentação em PDF, individual) | `[?]` | PDF pronto — ler, aprovar e enviar |
 | `[dd/mm — confirmar]` | Gestão de Conteúdo | AS2 — Planejamento estratégico de conteúdo MEGA-WR (relatório, individual, sem template) | `[?]` | PDF pronto (18 páginas, versão condensada) — ler, aprovar e enviar |
 | `[dd/mm]` | `[matéria]` | `[AS1 / prova / seminário]` | | Não iniciado |
@@ -38,6 +39,9 @@
 | Gestão de marcas | 2026/1 | | | | |
 | Marketing de conteúdo | 2026/1 | | | | |
 | Processos de decisão e tipos de segmentação | 2026/1 | | | | |
-| Construção de Interfaces e Experiência do Usuário | 2026/2 | **10** | | | |
+| Construção de Interfaces e Experiência do Usuário | 2026/2 | **10** | entregue 21/09 | | |
 | Gestão de Anúncios em Canais Sociais | 2026/2 | | | | |
 | Gestão de Conteúdo em Mídias Sociais | 2026/2 | **10** | | | |
+| Design Experimental | 2026/2 | | | | |
+| Marketing de relacionamento | 2026/2 | | | | |
+| Web Analytics e performance digital | 2026/2 | | | | |

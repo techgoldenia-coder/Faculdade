@@ -2,6 +2,28 @@
 
 Registro cronológico do que foi feito. Serve para retomar contexto em sessões futuras.
 
+## 16/11/2026 — Três matérias novas: Design Experimental, Marketing de relacionamento e Web Analytics
+
+- O Yan salvou os PDFs soltos na raiz de cada pasta, com o nome da plataforma (`Materiais Online N.pdf`). Os 24 foram movidos para `Base de dados/` e renomeados para `<Matéria> - N.pdf`, no padrão das outras matérias. Os dois `Materiais Online.pdf` sem número são a unidade 01, conferido no texto.
+- Texto extraído de todos com `pdftotext`, sem erro. Exceção: `Design Experimental - 2.1.pdf` é o infográfico da unidade 02, quase todo em imagem. Para usá-lo, ler as páginas como imagem.
+- `INFO.md` criado nas três, com as unidades, os tópicos, os cases e a bibliografia tirada das referências. **Pendentes:** semestre (registrado como 2026/2, a confirmar), professor, ementa oficial e avaliações.
+- **Web Analytics tem só 7 unidades:** falta confirmar se existe a unidade 08.
+- Bibliografia registrada só no `INFO.md`. Entra no `BANCO-DE-REFERENCIAS.md` quando for usada em trabalho.
+- Linhas adicionadas no `PAINEL.md` (matérias e notas) e no `ESTRUTURA.md`.
+- **Atividade das três matérias respondida no chat**, com justificativa a partir dos PDFs. Questões enviadas e respostas:
+  - Design Experimental: 1 D, 3 E, 6 E, V/F B (número da questão não informado), 10 D.
+  - Marketing de relacionamento: 1 C, 3 B, 4 B, 6 E, 7 A.
+  - Web Analytics: 1 C, 2 D, 4 E, 9 B (questão de mais risco, A é a alternativa concorrente), 10 B.
+  - As demais questões não foram enviadas. Respostas ainda não salvas em arquivo nas matérias.
+
+## 21/09/2026 — AS2 de Construção de Interfaces: entregue
+
+- **Entregue** `Entrega/YanSuyama_ProjetoUXUI.pdf` — 24 páginas, PDF único, capa com Professor Eduardo Alexandre Franciscon. Aguardando nota.
+- Conferido antes do envio: sem marcadores `[INSERIR LINK]`/`[PREENCHER]`/`[VERIFICAR]` no texto e protótipo respondendo no ar (`site-prototipo-megawr.vercel.app` e `/orcamento`, HTTP 200).
+- **Prazo registrado no `PAINEL` era 18/09**; entrega feita em 21/09. Quando a nota sair, verificar se houve desconto por atraso.
+- **Dois riscos foram entregues declarados, não resolvidos:** teste com 2 participantes (o enunciado pede 3), limitação assumida na seção 8.1 e como prioridade na conclusão; e o protótipo feito em código (Astro), não em Figma/XD/Sketch como o item 3.2 do enunciado nomeia.
+- Continua em aberto na pasta: `AS2 - Projeto UX UI MEGA-WR (rascunho).docx`, de 14/09, desatualizado — decisão do Yan sobre apagar ou mover.
+
 ## 16/09/2026 — AS2 de Gestão de Conteúdo: planejamento estratégico de conteúdo MEGA-WR
 
 - Enunciado recebido no chat: relatório estruturado em 3 partes (marca + calendário 70-20-10; métricas + cenário alto alcance × baixa conversão; community management + crise). **Individual, sem template.** Prazo e peso não informados.
