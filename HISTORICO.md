@@ -2,6 +2,38 @@
 
 Registro cronológico do que foi feito. Serve para retomar contexto em sessões futuras.
 
+## 19/11/2026 — AS2 de Web Analytics: relatórios estratégico e operacional
+
+- Enunciado recebido no chat: loja on-line de **presentes personalizados** com queda na conversão; analisar 30 dias de dados (GA4, Google Ads, Meta Ads) e entregar relatório estratégico (até 3 páginas, gestores) e operacional (até 8 páginas, time de marketing), com KPIs, análise e otimização por canal, 2 testes A/B e próximos passos. Planilha movida de Downloads para `AS2 - Relatórios de performance loja de presentes/`.
+- Formato igual à AS2 de Gestão de Anúncios: .pptx com gráficos nativos, gerado por script (`gerar_relatorios.py`, que lê a planilha e confere os números) e exportado para PDF pelo PowerPoint.
+- **Leitura do limite:** CAC de mídia paga = investimento ÷ faturamento das vendas pagas (un. 01) → 35,6%, acima dos 28% (R$ 126 por venda). Google 24,7%, Meta 63,5%.
+- **Achados:** só 28% de quem informa o pagamento compra; 35% saem depois de ver o frete; tablet com 3.800 usuários e nenhuma venda; compradores são mulheres de 25 a 44 anos no celular; Meta traz 39% do tráfego e 11% das vendas. Inconsistências da planilha apontadas nos slides (UTM do Meta, tag de compra, funil "Comprar" 3.350 × 655 vendas).
+- **Proposta:** destravar o checkout, realocar R$ 14 mil sem aumentar a verba (cenário ≈ 329 vendas pagas, CAC 27,0%) e segmentar e medir certo. Testes A/B: frete na página do produto e segmentação no Meta.
+- Fontes: só as unidades 01 a 07 (`PUCPR, [2024]a–g`). Nenhum dado de mercado externo. Conferido: 3 + 8 páginas, sem texto cortado, validação dos .pptx aprovada.
+- **Revisão final:** a pedido do Yan, os dois relatórios foram juntados em **um PDF só** (`YanSuyama_WebAnalytics_Relatorios.pdf`, 12 páginas: capa + 3 + 8, cada relatório com numeração própria). Ajustes: título do slide de origem (orgânico não tem "pouco tráfego"), meta de leads sem "hoje 0%", "pontos percentuais", 4º ponto do slide 1 sem repetição. "Atividade Somativa 2" tirado do rodapé, porque o enunciado não diz o número. Aprovado para envio.
+- **Entrega em 2 arquivos:** o Yan conferiu que são 2 relatórios separados. O PDF unificado foi mantido, e `separar_pdfs.py` gera `YanSuyama_WebAnalytics_RelatorioEstrategico.pdf` (3 p.) e `..._RelatorioOperacional.pdf` (8 p.), sem capa, para não passar do limite.
+- **Pendências:** confirmar se é AS2; prazo e peso; nota.
+
+## 19/11/2026 — AS2 de Marketing de Relacionamento: transformação cultural e omnichannel
+
+- Enunciado recebido no chat: consultoria para uma **rede de academias** (5 unidades, 3000 alunos, alta rotatividade, baixo engajamento, comunicação descentralizada, cultura de vendas, avaliações negativas). Pede diagnóstico e cultura, estratégia omnichannel e plano de implementação. Sem links de artigos de apoio nesta atividade. Template movido de Downloads para a raiz da matéria.
+- O caso é dado pelo enunciado, sem escolha de tema. MEGA-WR e Drip-Plan não se aplicam.
+- O template foi **preenchido no lugar**, mantendo títulos, perguntas e tabelas. O script `preencher_template.py` coloca cada bloco `@@` do `TRABALHO.md` na sua âncora.
+- Conteúdo: objetivo de 12 meses; 6 valores; 7 ações de engajamento interno; 7 canais; manual de comunicação (tom, prazos de resposta, LGPD); 12 métricas; cronograma em 3 etapas com piloto em 1 unidade; trilha de 6 treinamentos; 7 indicadores. As metas são **relativas à linha de base medida no mês 1**, porque o enunciado não dá números.
+- Fontes: só as unidades 01 a 08 (`PUCPR, [2025]a–h`) e a LGPD. Nenhum dado de mercado externo. Cada afirmação atribuída a uma unidade foi conferida no texto do PDF. A citação da Zappos foi retirada porque o material não fala em autonomia.
+- **Revisão final:** os 12 itens do enunciado estão cobertos; citações e referências batem (a–h + LGPD); não há texto do template sem preencher. Fonte dos quadros padronizada para "Elaborado pelo autor (2026)". Aprovado para envio.
+- **Pendências:** prazo e peso; nota.
+
+## 19/11/2026 — AS2 de Design Experimental: pré-projeto de pesquisa experimental MEGA-WR
+
+- Repositório clonado em `Desktop/Faculdade` (máquina do trabalho). O Yan deixou o repositório **público** por decisão própria, avisado da regra do `CLAUDE.md`; voltar para privado.
+- Enunciado recebido no chat: pré-projeto respondendo a 12 perguntas (problema, hipóteses, VI, VD, controle, design, ambiente, tratamento, participantes, seleção, entre × intra, análise), com o exemplo de Enns e Hackett (1990) via Creswell (2014). Template Word movido de Downloads para a raiz da matéria: é a **Atividade Somativa 2**.
+- **Tema escolhido pelo Yan:** MEGA-WR, fatorial 2 × 2 entre sujeitos, em laboratório on-line: condições de compra no anúncio (mínimo de 10 peças + preço de entrada) × foto (produto × cliente real de Leme) → intenção de pedir orçamento (Likert 7, 3 itens) e pedido de contato (sim/não). Hipóteses tiradas das entrevistas reais da AS2 de Construção de Interfaces.
+- Amostra: 160 (40 por condição); mínimo de 128 pela análise de poder (f = 0,25, α = 0,05, poder 0,80, conferida por cálculo). Análise: ANOVA fatorial, qui-quadrado e regressão logística.
+- **Fontes externas ao material** (reais, conferir se quiser): Cohen (1988), Faul *et al.* (2007, G*Power), Cronbach (1951), Resolução CNS 466/2012 e Creswell (2014), esta do enunciado. Material da PUC citado como `(PUCPR, [2025]a–g)`, com a data de "Fonte: a autora (2025)" nas unidades.
+- **Conferência final:** as 12 perguntas foram cobertas e citações e referências batem. Corrigido: a MEGA-WR **não tem tabela de preço**, então o "a partir de R$ X" passou a ser um valor a definir com os proprietários. O mínimo virou "10 peças por modelo", e os fatos vindos dos proprietários passaram a citar SUYAMA (2026), não o site. Aprovado para envio.
+- **Pendências:** prazo e peso; nota.
+
 ## 16/11/2026 — Três matérias novas: Design Experimental, Marketing de relacionamento e Web Analytics
 
 - O Yan salvou os PDFs soltos na raiz de cada pasta, com o nome da plataforma (`Materiais Online N.pdf`). Os 24 foram movidos para `Base de dados/` e renomeados para `<Matéria> - N.pdf`, no padrão das outras matérias. Os dois `Materiais Online.pdf` sem número são a unidade 01, conferido no texto.

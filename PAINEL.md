@@ -22,7 +22,9 @@
 |---|---|---|---|---|
 | `[dd/mm — confirmar]` | Gestão de Anúncios | AS2 — Análise de resultados e otimização do plano de mídia MEGA-WR (apresentação em PDF, individual) | `[?]` | PDF pronto — ler, aprovar e enviar |
 | `[dd/mm — confirmar]` | Gestão de Conteúdo | AS2 — Planejamento estratégico de conteúdo MEGA-WR (relatório, individual, sem template) | `[?]` | PDF pronto (18 páginas, versão condensada) — ler, aprovar e enviar |
-| `[dd/mm]` | `[matéria]` | `[AS1 / prova / seminário]` | | Não iniciado |
+| `[dd/mm — confirmar]` | Design Experimental | AS2 — Pré-projeto de pesquisa experimental MEGA-WR (fatorial 2 × 2, PDF no template) | `[?]` | PDF pronto (10 páginas + capa) — ler, aprovar e enviar |
+| `[dd/mm — confirmar]` | Marketing de relacionamento | AS2 — Projeto prático: transformação cultural e comunicação omnichannel de uma rede de academias (template da PUC, PDF) | `[?]` | PDF pronto (15 páginas), revisado — enviar |
+| `[dd/mm — confirmar]` | Web Analytics | AS2 `[VERIFICAR nº]` — Relatórios estratégico (3 p.) e operacional (8 p.) de performance digital de uma loja de presentes personalizados (2 PDFs) | `[?]` | PDFs prontos (3 + 8 páginas), revisados — enviar |
 
 ## Datas do semestre 2026/2
 

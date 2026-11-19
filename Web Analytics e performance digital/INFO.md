@@ -29,7 +29,7 @@
 
 | Avaliação | Peso | Formato | Prazo | Nota |
 |---|---|---|---|---|
-| `[PREENCHER]` | | | | |
+| AS2 — Relatórios estratégico e operacional (loja de presentes personalizados) | `[?]` | 2 PDFs em slides: estratégico (até 3 p.) e operacional (até 8 p.) | `[PREENCHER]` | — |
 
 ## Bibliografia (das referências das unidades)
 

@@ -30,7 +30,7 @@ Disciplina completa: 8 unidades, todas em `Base de dados/`.
 
 | Avaliação | Peso | Formato | Prazo | Nota |
 |---|---|---|---|---|
-| `[PREENCHER]` | | | | |
+| AS2 — projeto prático: transformação cultural e comunicação integrada (rede de academias fictícia do enunciado; individual, template da PUC) | `[?]` | Template preenchido, exportado em PDF | `[confirmar]` | |
 
 ## Bibliografia (das referências das unidades)
 

@@ -29,7 +29,7 @@ Disciplina completa: 8 unidades + 1 infográfico, todos em `Base de dados/`.
 
 | Avaliação | Peso | Formato | Prazo | Nota |
 |---|---|---|---|---|
-| `[PREENCHER]` | | | | |
+| AS2 — pré-projeto de pesquisa experimental (individual, PDF no template da PUC) | `[?]` | Texto respondendo às 12 perguntas do enunciado | `[confirmar]` | |
 
 ## Bibliografia (das referências das unidades)
 
